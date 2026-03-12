@@ -103,7 +103,7 @@ class ProductAreaCost(models.Model):
         for product in products:
             if product.default_width > 0 and product.default_height > 0:
                 new_price = product.default_width * product.default_height * self.rate
-                product.lst_price = new_price
+                product.list_price = new_price
                 count += 1
 
         self.updated_product_count = count
