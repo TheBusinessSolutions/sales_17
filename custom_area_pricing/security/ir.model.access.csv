@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_area_cost_manager,product.area.cost manager,model_product_area_cost,sales_team.group_sale_manager,1,1,1,1
+access_product_area_cost_user,product.area.cost user,model_product_area_cost,sales_team.group_sale_salesman,1,0,0,0

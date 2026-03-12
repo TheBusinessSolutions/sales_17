@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Under Sales > Configuration > Pricing Based Cost -->
+    <menuitem id="menu_product_area_cost"
+              name="Pricing Based Cost"
+              parent="sale.sale_order_menu_config"
+              action="custom_area_pricing.action_product_area_cost"
+              sequence="25"
+              groups="sales_team.group_sale_manager"/>
+
+</odoo>

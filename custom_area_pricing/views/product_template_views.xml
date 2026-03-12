@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_product_template_area_pricing" model="ir.ui.view">
+        <field name="name">product.template.area.pricing</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+
+            <!-- Add Area Pricing section inside the General Information tab,
+                 after the pricing section -->
+            <xpath expr="//page[@name='general_information']//group[hasclass('o_sale_pricelist_option')]"
+                   position="after">
+                <group string="Area Pricing" name="area_pricing_group">
+                    <field name="use_area_pricing"
+                           widget="boolean_toggle"
+                           string="Enable Area-Based Pricing"/>
+                    <field name="default_width"
+                           attrs="{'invisible': [('use_area_pricing', '=', False)],
+                                   'required': [('use_area_pricing', '=', True)]}"
+                           string="Default Width (m)"/>
+                    <field name="default_height"
+                           attrs="{'invisible': [('use_area_pricing', '=', False)],
+                                   'required': [('use_area_pricing', '=', True)]}"
+                           string="Default Height (m)"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

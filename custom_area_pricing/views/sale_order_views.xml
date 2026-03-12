@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ── Sale Order Form: Recalculate button + line columns ─────────────── -->
+    <record id="view_sale_order_area_pricing" model="ir.ui.view">
+        <field name="name">sale.order.area.pricing</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Recalculate button in the header (only visible on draft/sent) -->
+            <xpath expr="//header/button[@name='action_confirm']" position="before">
+                <button name="action_recalculate_area_prices"
+                        string="↻ Recalculate Area Prices"
+                        type="object"
+                        class="btn-secondary"
+                        attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"
+                        help="Refresh all area-priced lines using today's latest Pricing Based Cost rate."/>
+            </xpath>
+
+            <!-- Add Width, Height, Area, Rate columns to the order lines -->
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_id']"
+                   position="after">
+                <field name="is_area_priced" column_invisible="True"/>
+                <field name="area_width"
+                       string="W (m)"
+                       attrs="{'invisible': [('is_area_priced', '=', False)],
+                               'readonly': [('state', 'not in', ['draft', 'sent'])]}"
+                       optional="show"/>
+                <field name="area_height"
+                       string="H (m)"
+                       attrs="{'invisible': [('is_area_priced', '=', False)],
+                               'readonly': [('state', 'not in', ['draft', 'sent'])]}"
+                       optional="show"/>
+                <field name="area_sqm"
+                       string="Area (m²)"
+                       attrs="{'invisible': [('is_area_priced', '=', False)]}"
+                       optional="show"/>
+                <field name="applied_cost_rate"
+                       string="Rate/m²"
+                       attrs="{'invisible': [('is_area_priced', '=', False)]}"
+                       optional="show"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ── Sale Order Line Form popup: show area fields ───────────────────── -->
+    <record id="view_sale_order_line_area_pricing" model="ir.ui.view">
+        <field name="name">sale.order.line.area.pricing</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='product_id']" position="after">
+                <group string="Area Pricing Dimensions"
+                       attrs="{'invisible': [('is_area_priced', '=', False)]}">
+                    <field name="is_area_priced" invisible="1"/>
+                    <field name="area_width" string="Width (m)"/>
+                    <field name="area_height" string="Height (m)"/>
+                    <field name="area_sqm" string="Area (m²)" readonly="1"/>
+                    <field name="applied_cost_rate" string="Applied Rate (per m²)" readonly="1"/>
+                    <field name="applied_cost_rate_id" string="Cost Rate Record" readonly="1"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
