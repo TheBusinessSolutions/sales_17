@@ -4,14 +4,6 @@ from odoo.exceptions import ValidationError
 
 
 class ProductAreaCost(models.Model):
-    """
-    Pricing Based Cost Rate Table.
-
-    When a new rate is saved, all products with use_area_pricing=True
-    get their list_price updated as: default_width x default_height x rate.
-    A snapshot of before/after prices is stored in product.area.cost.line
-    for audit and review.
-    """
     _name = 'product.area.cost'
     _description = 'Pricing Based Cost Rate'
     _order = 'date desc, id desc'
@@ -46,6 +38,11 @@ class ProductAreaCost(models.Model):
         default=lambda self: self.env.company,
         required=True,
     )
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('applied', 'Applied'),
+    ], string='Status', default='draft', readonly=True, copy=False)
+
     affected_line_ids = fields.One2many(
         'product.area.cost.line',
         'cost_rate_id',
@@ -57,10 +54,15 @@ class ProductAreaCost(models.Model):
         compute='_compute_updated_product_count',
     )
 
-    @api.depends('affected_line_ids')
-    def _compute_updated_product_count(self):
-        for rec in self:
-            rec.updated_product_count = len(rec.affected_line_ids)
+    # ── Validation: no duplicate date per category per company ────────────────
+    _sql_constraints = [
+        (
+            'unique_date_categ_company',
+            'UNIQUE(date, categ_id, company_id)',
+            'A Pricing Based Cost rate already exists for this date and category. '
+            'Please use a different date or archive the existing record first.',
+        ),
+    ]
 
     @api.constrains('rate')
     def _check_rate_positive(self):
@@ -68,25 +70,45 @@ class ProductAreaCost(models.Model):
             if rec.rate <= 0:
                 raise ValidationError(_('Pricing Based Cost rate must be greater than zero.'))
 
-    def write(self, vals):
-        res = super().write(vals)
-        if 'rate' in vals or 'categ_id' in vals:
-            for rec in self:
-                rec._update_product_prices()
-        return res
+    @api.constrains('state')
+    def _check_one_applied_per_date_categ(self):
+        for rec in self:
+            if rec.state == 'applied':
+                duplicate = self.search([
+                    ('id', '!=', rec.id),
+                    ('date', '=', rec.date),
+                    ('categ_id', '=', rec.categ_id.id if rec.categ_id else False),
+                    ('company_id', '=', rec.company_id.id),
+                    ('state', '=', 'applied'),
+                ])
+                if duplicate:
+                    raise ValidationError(_(
+                        'An applied rate already exists for this date and category: %s. '
+                        'Please archive it before applying a new one.'
+                    ) % duplicate[0].name)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        records = super().create(vals_list)
-        for rec in records:
-            rec._update_product_prices()
-        return records
+    @api.depends('affected_line_ids')
+    def _compute_updated_product_count(self):
+        for rec in self:
+            rec.updated_product_count = len(rec.affected_line_ids)
+
+    def action_apply_rate(self):
+        """
+        Manually apply this rate: update product list_price and mark as applied.
+        Only Sale Administrators can execute this.
+        """
+        self.ensure_one()
+        if self.state == 'applied':
+            raise ValidationError(_('This rate has already been applied.'))
+        self._update_product_prices()
+        self.state = 'applied'
+
+    def action_reset_to_draft(self):
+        """Reset to draft so it can be edited. Does NOT revert product prices."""
+        self.ensure_one()
+        self.state = 'draft'
 
     def _update_product_prices(self):
-        """
-        Update list_price for all area-priced products in scope.
-        Stores a before/after snapshot in product.area.cost.line.
-        """
         self.ensure_one()
 
         domain = [('use_area_pricing', '=', True)]
@@ -95,7 +117,7 @@ class ProductAreaCost(models.Model):
 
         products = self.env['product.template'].search(domain)
 
-        # Clear previous snapshot lines for this rate record
+        # Clear previous snapshot
         self.affected_line_ids.unlink()
 
         lines_to_create = []
@@ -127,78 +149,76 @@ class ProductAreaCost(models.Model):
 
     @api.model
     def get_rate_for_product(self, product_id, ref_date=None):
-        """Return the applicable rate for a product on ref_date (for SO snapshots)."""
         if not product_id:
             return 0.0
-
         product = self.env['product.template'].browse(product_id)
         categ_id = product.categ_id.id if product.exists() else False
         ref_date = ref_date or fields.Date.context_today(self)
-
         domain_base = [
             ('date', '<=', ref_date),
             ('active', '=', True),
+            ('state', '=', 'applied'),
             ('company_id', '=', self.env.company.id),
         ]
-
         if categ_id:
             specific = self.search(
                 domain_base + [('categ_id', '=', categ_id)],
-                order='date desc, id desc',
-                limit=1,
+                order='date desc, id desc', limit=1,
             )
             if specific:
                 return specific.rate
-
         global_rate = self.search(
             domain_base + [('categ_id', '=', False)],
-            order='date desc, id desc',
-            limit=1,
+            order='date desc, id desc', limit=1,
         )
         return global_rate.rate if global_rate else 0.0
 
+    @api.model
+    def get_current_rate_record(self, categ_id=False):
+        """Return the most recently applied rate record (for SO display)."""
+        domain = [
+            ('active', '=', True),
+            ('state', '=', 'applied'),
+            ('company_id', '=', self.env.company.id),
+        ]
+        if categ_id:
+            rec = self.search(
+                domain + [('categ_id', '=', categ_id)],
+                order='date desc, id desc', limit=1,
+            )
+            if rec:
+                return rec
+        return self.search(
+            domain + [('categ_id', '=', False)],
+            order='date desc, id desc', limit=1,
+        )
+
 
 class ProductAreaCostLine(models.Model):
-    """
-    Snapshot of product price changes triggered by a Pricing Based Cost rate.
-    One record per affected product per rate change.
-    """
     _name = 'product.area.cost.line'
     _description = 'Pricing Based Cost – Affected Product'
     _order = 'product_id asc'
 
     cost_rate_id = fields.Many2one(
-        'product.area.cost',
-        string='Cost Rate',
-        required=True,
-        ondelete='cascade',
+        'product.area.cost', string='Cost Rate',
+        required=True, ondelete='cascade',
     )
     product_id = fields.Many2one(
-        'product.template',
-        string='Product',
-        required=True,
-        readonly=True,
+        'product.template', string='Product',
+        required=True, readonly=True,
     )
     price_before = fields.Float(
-        string='Price Before',
-        digits=(16, 2),
-        readonly=True,
+        string='Price Before', digits=(16, 2), readonly=True,
     )
     price_after = fields.Float(
-        string='New Price',
-        digits=(16, 2),
-        readonly=True,
+        string='New Price', digits=(16, 2), readonly=True,
     )
     price_diff = fields.Float(
-        string='Difference',
-        digits=(16, 2),
-        compute='_compute_price_diff',
-        store=True,
+        string='Difference', digits=(16, 2),
+        compute='_compute_price_diff', store=True,
     )
     currency_id = fields.Many2one(
-        related='cost_rate_id.currency_id',
-        store=True,
-        readonly=True,
+        related='cost_rate_id.currency_id', store=True, readonly=True,
     )
 
     @api.depends('price_before', 'price_after')

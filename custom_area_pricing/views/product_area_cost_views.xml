@@ -6,10 +6,9 @@
         <field name="name">product.area.cost.line.tree</field>
         <field name="model">product.area.cost.line</field>
         <field name="arch" type="xml">
-            <tree string="Affected Products"
+            <tree string="Affected Products" create="false" edit="false" delete="false"
                   decoration-success="price_diff &gt; 0"
-                  decoration-danger="price_diff &lt; 0"
-                  create="false" edit="false" delete="false">
+                  decoration-danger="price_diff &lt; 0">
                 <field name="product_id" string="Product"/>
                 <field name="price_before" string="Price Before"
                        widget="monetary" options="{'currency_field': 'currency_id'}"/>
@@ -28,14 +27,18 @@
         <field name="model">product.area.cost</field>
         <field name="arch" type="xml">
             <tree string="Pricing Based Cost Rates"
-                  decoration-muted="active == False">
+                  decoration-muted="active == False"
+                  decoration-success="state == 'applied'"
+                  decoration-info="state == 'draft'">
                 <field name="name"/>
                 <field name="date"/>
                 <field name="rate" string="Rate (per m²)"/>
-                <field name="currency_id" groups="base.group_multi_currency"/>
-                <field name="categ_id" string="Category (blank = All)"/>
+                <field name="categ_id" string="Category"/>
+                <field name="state" string="Status"
+                       widget="badge"
+                       decoration-success="state == 'applied'"
+                       decoration-warning="state == 'draft'"/>
                 <field name="updated_product_count" string="Products Updated"/>
-                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="active" invisible="1"/>
             </tree>
         </field>
@@ -47,6 +50,23 @@
         <field name="model">product.area.cost</field>
         <field name="arch" type="xml">
             <form string="Pricing Based Cost Rate">
+                <header>
+                    <button name="action_apply_rate"
+                            string="Apply Rate"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state == 'applied'"
+                            groups="sales_team.group_sale_manager"
+                            confirm="This will update the Sales Price of all matching area-priced products. Continue?"/>
+                    <button name="action_reset_to_draft"
+                            string="Reset to Draft"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="state == 'draft'"
+                            groups="sales_team.group_sale_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,applied"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_affected_products"
@@ -62,18 +82,20 @@
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
-                            <field name="name" placeholder="e.g. March 2025 Rate Increase"/>
+                            <field name="name" placeholder="e.g. March 2025 Rate Increase"
+                                   readonly="state == 'applied'"/>
                         </h1>
                     </div>
                     <group>
                         <group string="Rate Details">
-                            <field name="date"/>
-                            <field name="rate" string="Pricing Based Cost (per m²)"/>
-                            <field name="currency_id"/>
+                            <field name="date" readonly="state == 'applied'"/>
+                            <field name="rate" string="Pricing Based Cost (per m²)"
+                                   readonly="state == 'applied'"/>
+                            <field name="currency_id" readonly="state == 'applied'"/>
                         </group>
                         <group string="Scope">
                             <field name="categ_id" string="Product Category"
-                                   help="Leave empty to apply to ALL categories."/>
+                                   readonly="state == 'applied'"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="active"/>
                         </group>
@@ -82,13 +104,10 @@
                         <field name="notes" nolabel="1"
                                placeholder="Optional: reason for this rate, supplier reference, etc."/>
                     </group>
-                    <!-- Inline affected products tab -->
                     <notebook>
                         <page string="Affected Products" name="affected_products"
                               invisible="updated_product_count == 0">
-                            <field name="affected_line_ids"
-                                   readonly="1"
-                                   no_open="1">
+                            <field name="affected_line_ids" readonly="1" no_open="1">
                                 <tree decoration-success="price_diff &gt; 0"
                                       decoration-danger="price_diff &lt; 0"
                                       create="false" edit="false" delete="false">
@@ -120,10 +139,10 @@
             <search string="Pricing Based Cost">
                 <field name="name"/>
                 <field name="categ_id"/>
-                <filter string="Active" name="active" domain="[('active','=',True)]"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Applied" name="applied" domain="[('state','=','applied')]"/>
+                <separator/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                <filter string="Global (All Categories)" name="global"
-                        domain="[('categ_id','=',False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Category" name="group_categ"
                             context="{'group_by': 'categ_id'}"/>
@@ -140,14 +159,14 @@
         <field name="res_model">product.area.cost</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_product_area_cost_search"/>
-        <field name="context">{'search_default_active': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first Pricing Based Cost rate
             </p>
             <p>
-                When saved, all area-priced products will have their Sales Price
-                updated automatically. A full before/after log is stored on each rate record.
+                Save the rate in Draft, then click <b>Apply Rate</b> to update
+                all area-priced product prices. A full before/after log is stored
+                on each applied rate record.
             </p>
         </field>
     </record>

@@ -7,36 +7,40 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
 
-            <!-- Recalculate button: visible on draft/sent only -->
+            <!-- Recalculate button -->
             <xpath expr="//header/button[@name='action_confirm']" position="before">
                 <button name="action_recalculate_area_prices"
                         string="↻ Recalculate Area Prices"
                         type="object"
                         class="btn-secondary"
-                        invisible="state not in ('draft', 'sent')"
-                        help="Refresh all area-priced lines to the current Pricing Based Cost rate."/>
+                        invisible="state not in ('draft', 'sent')"/>
             </xpath>
 
-            <!-- Dimension + rate snapshot columns on order lines -->
+            <!-- Pricing Based Cost name below pricelist field -->
+            <xpath expr="//field[@name='pricelist_id']" position="after">
+                <field name="area_cost_rate_id"
+                       string="Pricing Based Cost"
+                       readonly="1"
+                       options="{'no_open': True}"
+                       invisible="area_cost_rate_id == False"/>
+            </xpath>
+
+            <!-- Dimension columns on order lines -->
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']"
                    position="after">
                 <field name="is_area_priced" column_invisible="1"/>
-                <field name="area_width"
-                       string="W (m)"
+                <field name="area_width" string="W (m)"
                        invisible="not is_area_priced"
                        readonly="state not in ('draft', 'sent')"
                        optional="show"/>
-                <field name="area_height"
-                       string="H (m)"
+                <field name="area_height" string="H (m)"
                        invisible="not is_area_priced"
                        readonly="state not in ('draft', 'sent')"
                        optional="show"/>
-                <field name="area_sqm"
-                       string="Area (m²)"
+                <field name="area_sqm" string="Area (m²)"
                        invisible="not is_area_priced"
                        optional="show"/>
-                <field name="applied_cost_rate"
-                       string="Rate/m²"
+                <field name="applied_cost_rate" string="Rate/m²"
                        invisible="not is_area_priced"
                        optional="show"/>
             </xpath>
