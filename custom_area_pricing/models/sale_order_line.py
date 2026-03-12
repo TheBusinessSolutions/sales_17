@@ -171,43 +171,35 @@ class SaleOrderLine(models.Model):
         if not pricelist or base_price == 0.0:
             return base_price
 
-        partner = self.order_id.partner_id
         product = self.product_id
         qty = self.product_uom_qty or 1.0
         date = self.order_id.date_order or fields.Datetime.now()
+        uom = self.product_uom
 
-        # Use Odoo's pricelist to get the price
-        # get_product_price returns the final price after all pricelist rules
-        pricelist_price = pricelist.get_product_price(
-            product, qty, partner, date=date, uom_id=self.product_uom.id
-        )
-
-        # Detect if pricelist returned a Fixed Price (not derived from base_price)
-        # We do this by checking if any rule for this product is type 'fixed'
+        # Odoo 17: use _get_product_rule to find the matching pricelist item
         rule_id = pricelist._get_product_rule(
-            product, qty, uom=self.product_uom, date=date
+            product, qty, uom=uom, date=date
         )
-        if rule_id:
-            rule = self.env['product.pricelist.item'].browse(rule_id)
-            if rule.compute_price == 'fixed':
-                # Fixed price rule — pricelist wins completely
-                self.discount = 0.0
-                return rule.fixed_price
 
-            elif rule.compute_price == 'percentage':
-                # Discount % rule applied on top of our base_price
-                discount_pct = rule.percent_price or 0.0
-                discounted = base_price * (1.0 - discount_pct / 100.0)
-                # Store the discount visibly on the line
-                self.discount = discount_pct
-                return base_price  # price_unit stays as base; discount shown separately
+        if not rule_id:
+            # No matching rule — return base price as-is
+            return base_price
 
-            elif rule.compute_price == 'formula':
-                # Formula-based rule: apply the price ratio against our base
-                # (edge case — treat like no rule, return base_price)
-                return base_price
+        rule = self.env['product.pricelist.item'].browse(rule_id)
 
-        # No matching pricelist rule — return base price
+        if rule.compute_price == 'fixed':
+            # Fixed price rule — pricelist wins completely, ignore area formula
+            self.discount = 0.0
+            return rule.fixed_price
+
+        elif rule.compute_price == 'percentage':
+            # Discount % on top of our area-computed base price
+            discount_pct = rule.percent_price or 0.0
+            self.discount = discount_pct
+            # price_unit = base_price; discount shown separately on the line
+            return base_price
+
+        # Formula or other rule types — return base price unchanged
         return base_price
 
     # ─────────────────────────────────────────────────────────────────────────
