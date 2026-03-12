@@ -9,8 +9,7 @@
 
             <!-- Add Area Pricing section inside the General Information tab,
                  after the pricing section -->
-            <xpath expr="//page[@name='general_information']//group[hasclass('o_sale_pricelist_option')]"
-                   position="after">
+            <xpath expr="//group[@name='group_standard_price']" position="after">
                 <group string="Area Pricing" name="area_pricing_group">
                     <field name="use_area_pricing"
                            widget="boolean_toggle"
