@@ -16,12 +16,12 @@
                            widget="boolean_toggle"
                            string="Enable Area-Based Pricing"/>
                     <field name="default_width"
-                           attrs="{'invisible': [('use_area_pricing', '=', False)],
-                                   'required': [('use_area_pricing', '=', True)]}"
+                           invisible="not use_area_pricing"
+                           required="use_area_pricing"
                            string="Default Width (m)"/>
                     <field name="default_height"
-                           attrs="{'invisible': [('use_area_pricing', '=', False)],
-                                   'required': [('use_area_pricing', '=', True)]}"
+                           invisible="not use_area_pricing"
+                           required="use_area_pricing"
                            string="Default Height (m)"/>
                 </group>
             </xpath>

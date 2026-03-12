@@ -6,7 +6,7 @@
         <field name="name">product.area.cost.list</field>
         <field name="model">product.area.cost</field>
         <field name="arch" type="xml">
-            <list string="Pricing Based Cost Rates"
+            <tree string="Pricing Based Cost Rates"
                   decoration-muted="active == False">
                 <field name="name"/>
                 <field name="date"/>
@@ -14,8 +14,8 @@
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="categ_id" string="Category (blank = All)"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="active" column_invisible="True"/>
-            </list>
+                <field name="active" invisible="1"/>
+            </tree>
         </field>
     </record>
 
@@ -80,7 +80,7 @@
     <record id="action_product_area_cost" model="ir.actions.act_window">
         <field name="name">Pricing Based Cost</field>
         <field name="res_model">product.area.cost</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_product_area_cost_search"/>
         <field name="context">{'search_default_active': 1}</field>
         <field name="help" type="html">

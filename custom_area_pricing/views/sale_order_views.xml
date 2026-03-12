@@ -14,31 +14,31 @@
                         string="↻ Recalculate Area Prices"
                         type="object"
                         class="btn-secondary"
-                        attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}"
+                        invisible="state not in ('draft', 'sent')"
                         help="Refresh all area-priced lines using today's latest Pricing Based Cost rate."/>
             </xpath>
 
             <!-- Add Width, Height, Area, Rate columns to the order lines -->
-            <xpath expr="//field[@name='order_line']/list/field[@name='product_id']"
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']"
                    position="after">
-                <field name="is_area_priced" column_invisible="True"/>
+                <field name="is_area_priced" column_invisible="1"/>
                 <field name="area_width"
                        string="W (m)"
-                       attrs="{'invisible': [('is_area_priced', '=', False)],
-                               'readonly': [('state', 'not in', ['draft', 'sent'])]}"
+                       invisible="not is_area_priced"
+                       readonly="state not in ('draft', 'sent')"
                        optional="show"/>
                 <field name="area_height"
                        string="H (m)"
-                       attrs="{'invisible': [('is_area_priced', '=', False)],
-                               'readonly': [('state', 'not in', ['draft', 'sent'])]}"
+                       invisible="not is_area_priced"
+                       readonly="state not in ('draft', 'sent')"
                        optional="show"/>
                 <field name="area_sqm"
                        string="Area (m²)"
-                       attrs="{'invisible': [('is_area_priced', '=', False)]}"
+                       invisible="not is_area_priced"
                        optional="show"/>
                 <field name="applied_cost_rate"
                        string="Rate/m²"
-                       attrs="{'invisible': [('is_area_priced', '=', False)]}"
+                       invisible="not is_area_priced"
                        optional="show"/>
             </xpath>
 
@@ -53,9 +53,9 @@
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='product_id']" position="after">
+                <field name="is_area_priced" invisible="1"/>
                 <group string="Area Pricing Dimensions"
-                       attrs="{'invisible': [('is_area_priced', '=', False)]}">
-                    <field name="is_area_priced" invisible="1"/>
+                       invisible="not is_area_priced">
                     <field name="area_width" string="Width (m)"/>
                     <field name="area_height" string="Height (m)"/>
                     <field name="area_sqm" string="Area (m²)" readonly="1"/>
