@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ── Sale Order Form: Recalculate button + line columns ─────────────── -->
     <record id="view_sale_order_area_pricing" model="ir.ui.view">
         <field name="name">sale.order.area.pricing</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
 
-            <!-- Recalculate button in the header (only visible on draft/sent) -->
+            <!-- Recalculate button: visible on draft/sent only -->
             <xpath expr="//header/button[@name='action_confirm']" position="before">
                 <button name="action_recalculate_area_prices"
                         string="↻ Recalculate Area Prices"
                         type="object"
                         class="btn-secondary"
                         invisible="state not in ('draft', 'sent')"
-                        help="Refresh all area-priced lines using today's latest Pricing Based Cost rate."/>
+                        help="Refresh all area-priced lines to the current Pricing Based Cost rate."/>
             </xpath>
 
-            <!-- Add Width, Height, Area, Rate columns to the order lines -->
+            <!-- Dimension + rate snapshot columns on order lines -->
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']"
                    position="after">
                 <field name="is_area_priced" column_invisible="1"/>
@@ -44,7 +43,5 @@
 
         </field>
     </record>
-
-
 
 </odoo>

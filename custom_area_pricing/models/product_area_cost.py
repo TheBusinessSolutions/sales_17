@@ -7,13 +7,11 @@ class ProductAreaCost(models.Model):
     """
     Pricing Based Cost Rate Table.
 
-    Stores a dated cost-per-square-meter rate, optionally scoped
-    to a product category.  Lookup always picks the most recent
-    record whose date <= the reference date AND whose category
-    matches the product (or has no category = applies to all).
+    When a new rate is saved, all products with use_area_pricing=True
+    get their lst_price updated as: default_width x default_height x rate.
 
-    Category-specific records take priority over "all categories" records
-    on the same date.
+    Odoo's standard pricelist engine then runs on lst_price normally —
+    discounts, fixed prices, qty breaks all work out of the box.
     """
     _name = 'product.area.cost'
     _description = 'Pricing Based Cost Rate'
@@ -22,21 +20,17 @@ class ProductAreaCost(models.Model):
     name = fields.Char(
         string='Reference',
         required=True,
-        help='e.g. "March 2025 Rate Increase" — for internal tracking only.',
+        help='e.g. "March 2025 Rate Increase"',
     )
     date = fields.Date(
         string='Effective Date',
         required=True,
         default=fields.Date.context_today,
-        help='This rate applies to quotations dated on or after this date '
-             '(until a newer record exists).',
     )
     rate = fields.Float(
         string='Pricing Based Cost (per m²)',
         required=True,
         digits=(16, 4),
-        help='Cost per square meter used to compute the sale price.\n'
-             'Formula: Sales Price = Width × Height × Rate',
     )
     currency_id = fields.Many2one(
         'res.currency',
@@ -47,9 +41,8 @@ class ProductAreaCost(models.Model):
     categ_id = fields.Many2one(
         'product.category',
         string='Product Category',
-        help='Leave empty to apply this rate to ALL product categories.\n'
-             'A category-specific record always takes priority over a '
-             'global (no-category) record on the same date.',
+        help='Leave empty to apply to ALL categories. '
+             'A category-specific record takes priority over a global one.',
     )
     notes = fields.Text(string='Notes')
     active = fields.Boolean(default=True)
@@ -59,6 +52,12 @@ class ProductAreaCost(models.Model):
         default=lambda self: self.env.company,
         required=True,
     )
+    updated_product_count = fields.Integer(
+        string='Products Updated',
+        readonly=True,
+        default=0,
+        help='Number of products whose Sales Price was updated when this rate was saved.',
+    )
 
     @api.constrains('rate')
     def _check_rate_positive(self):
@@ -66,61 +65,97 @@ class ProductAreaCost(models.Model):
             if rec.rate <= 0:
                 raise ValidationError(_('Pricing Based Cost rate must be greater than zero.'))
 
+    def write(self, vals):
+        res = super().write(vals)
+        if 'rate' in vals or 'categ_id' in vals:
+            for rec in self:
+                rec._update_product_prices()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        for rec in records:
+            rec._update_product_prices()
+        return records
+
+    def _update_product_prices(self):
+        """
+        Update lst_price for all products with use_area_pricing = True
+        that match this rate's category scope.
+
+        Price = default_width x default_height x self.rate
+
+        Products with no default dimensions set are skipped (price would be 0).
+        """
+        self.ensure_one()
+
+        domain = [('use_area_pricing', '=', True)]
+
+        # Category scope: if this rate has a category, only update that category
+        # If global (no category), update ALL area-priced products
+        if self.categ_id:
+            domain.append(('categ_id', 'child_of', self.categ_id.id))
+
+        products = self.env['product.template'].search(domain)
+
+        count = 0
+        for product in products:
+            if product.default_width > 0 and product.default_height > 0:
+                new_price = product.default_width * product.default_height * self.rate
+                product.lst_price = new_price
+                count += 1
+
+        self.updated_product_count = count
+
+    def action_preview_update(self):
+        """
+        Show a preview of which products will be updated and their new prices,
+        without actually saving. Useful before committing a rate change.
+        """
+        self.ensure_one()
+        domain = [('use_area_pricing', '=', True)]
+        if self.categ_id:
+            domain.append(('categ_id', 'child_of', self.categ_id.id))
+
+        products = self.env['product.template'].search(domain)
+        lines = []
+        for p in products:
+            if p.default_width > 0 and p.default_height > 0:
+                new_price = p.default_width * p.default_height * self.rate
+                lines.append(
+                    f"  • {p.name}: {p.default_width} x {p.default_height} x "
+                    f"{self.rate} = {new_price:.2f}"
+                )
+
+        msg = _('%d product(s) will be updated:\n\n%s') % (
+            len(lines), '\n'.join(lines) if lines else _('None')
+        )
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Preview: Products to be Updated'),
+                'message': msg,
+                'sticky': True,
+                'type': 'info',
+            },
+        }
+
     @api.model
     def get_rate_for_product(self, product_id, ref_date=None):
         """
         Return the applicable rate (float) for a given product on ref_date.
+        Used for snapshotting the rate on SO lines at the time of order creation.
 
         Priority:
-          1. Most recent record with date <= ref_date AND categ_id = product.categ_id
-          2. Most recent record with date <= ref_date AND categ_id = False (global)
-
-        Returns 0.0 if no rate is found.
+          1. Most recent record with date <= ref_date AND categ matches product
+          2. Most recent record with date <= ref_date AND categ = False (global)
         """
         if not product_id:
             return 0.0
 
-        product = self.env['product.product'].browse(product_id)
-        if not product.exists():
-            product = self.env['product.template'].browse(product_id)
-
-        categ_id = product.categ_id.id if hasattr(product, 'categ_id') else False
-        ref_date = ref_date or fields.Date.context_today(self)
-
-        domain_base = [
-            ('date', '<=', ref_date),
-            ('active', '=', True),
-            ('company_id', '=', self.env.company.id),
-        ]
-
-        # 1. Category-specific rate
-        if categ_id:
-            specific = self.search(
-                domain_base + [('categ_id', '=', categ_id)],
-                order='date desc, id desc',
-                limit=1,
-            )
-            if specific:
-                return specific.rate
-
-        # 2. Global rate (no category)
-        global_rate = self.search(
-            domain_base + [('categ_id', '=', False)],
-            order='date desc, id desc',
-            limit=1,
-        )
-        return global_rate.rate if global_rate else 0.0
-
-    @api.model
-    def get_rate_record_for_product(self, product_id, ref_date=None):
-        """
-        Same as get_rate_for_product but returns the full record (or empty).
-        Used to store the applied_cost_rate_id snapshot on SO lines.
-        """
-        if not product_id:
-            return self.browse()
-
-        product = self.env['product.product'].browse(product_id)
+        product = self.env['product.template'].browse(product_id)
         categ_id = product.categ_id.id if product.exists() else False
         ref_date = ref_date or fields.Date.context_today(self)
 
@@ -137,11 +172,11 @@ class ProductAreaCost(models.Model):
                 limit=1,
             )
             if specific:
-                return specific
+                return specific.rate
 
         global_rate = self.search(
             domain_base + [('categ_id', '=', False)],
             order='date desc, id desc',
             limit=1,
         )
-        return global_rate or self.browse()
+        return global_rate.rate if global_rate else 0.0

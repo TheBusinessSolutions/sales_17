@@ -26,6 +26,17 @@
         <field name="arch" type="xml">
             <form string="Pricing Based Cost Rate">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_preview_update"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-eye"
+                                string="Preview Update"
+                                help="See which products will be updated before saving."/>
+                        <button class="oe_stat_button" icon="fa-tags" type="object" name="action_preview_update">
+                            <field string="Products Updated" name="updated_product_count" widget="statinfo"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
