@@ -7,7 +7,7 @@
         <field name="model">product.area.cost</field>
         <field name="arch" type="xml">
             <list string="Pricing Based Cost Rates"
-                  decoration-muted="not active">
+                  decoration-muted="active == False">
                 <field name="name"/>
                 <field name="date"/>
                 <field name="rate" string="Rate (per m²)"/>
