@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ── List View ──────────────────────────────────────────────────────── -->
-    <record id="view_product_area_cost_list" model="ir.ui.view">
-        <field name="name">product.area.cost.list</field>
+    <!-- ── Affected Products List View ───────────────────────────────────── -->
+    <record id="view_product_area_cost_line_tree" model="ir.ui.view">
+        <field name="name">product.area.cost.line.tree</field>
+        <field name="model">product.area.cost.line</field>
+        <field name="arch" type="xml">
+            <tree string="Affected Products"
+                  decoration-success="price_diff &gt; 0"
+                  decoration-danger="price_diff &lt; 0"
+                  create="false" edit="false" delete="false">
+                <field name="product_id" string="Product"/>
+                <field name="price_before" string="Price Before"
+                       widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="price_after" string="New Price"
+                       widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="price_diff" string="Difference"
+                       widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" column_invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ── Pricing Based Cost List View ──────────────────────────────────── -->
+    <record id="view_product_area_cost_tree" model="ir.ui.view">
+        <field name="name">product.area.cost.tree</field>
         <field name="model">product.area.cost</field>
         <field name="arch" type="xml">
             <tree string="Pricing Based Cost Rates"
@@ -13,13 +34,14 @@
                 <field name="rate" string="Rate (per m²)"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="categ_id" string="Category (blank = All)"/>
+                <field name="updated_product_count" string="Products Updated"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>
 
-    <!-- ── Form View ──────────────────────────────────────────────────────── -->
+    <!-- ── Pricing Based Cost Form View ──────────────────────────────────── -->
     <record id="view_product_area_cost_form" model="ir.ui.view">
         <field name="name">product.area.cost.form</field>
         <field name="model">product.area.cost</field>
@@ -27,14 +49,14 @@
             <form string="Pricing Based Cost Rate">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_preview_update"
+                        <button name="action_view_affected_products"
                                 type="object"
                                 class="oe_stat_button"
-                                icon="fa-eye"
-                                string="Preview Update"
-                                help="See which products will be updated before saving."/>
-                        <button class="oe_stat_button" icon="fa-tags" type="object" name="action_preview_update">
-                            <field string="Products Updated" name="updated_product_count" widget="statinfo"/>
+                                icon="fa-tags"
+                                invisible="updated_product_count == 0">
+                            <field name="updated_product_count"
+                                   string="Products Updated"
+                                   widget="statinfo"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -50,16 +72,41 @@
                             <field name="currency_id"/>
                         </group>
                         <group string="Scope">
-                            <field name="categ_id"
-                                   string="Product Category"
-                                   help="Leave empty to apply to ALL categories. A category-specific rate takes priority on the same date."/>
+                            <field name="categ_id" string="Product Category"
+                                   help="Leave empty to apply to ALL categories."/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="active"/>
                         </group>
                     </group>
                     <group string="Notes">
-                        <field name="notes" nolabel="1" placeholder="Optional: reason for this rate, supplier reference, etc."/>
+                        <field name="notes" nolabel="1"
+                               placeholder="Optional: reason for this rate, supplier reference, etc."/>
                     </group>
+                    <!-- Inline affected products tab -->
+                    <notebook>
+                        <page string="Affected Products" name="affected_products"
+                              invisible="updated_product_count == 0">
+                            <field name="affected_line_ids"
+                                   readonly="1"
+                                   no_open="1">
+                                <tree decoration-success="price_diff &gt; 0"
+                                      decoration-danger="price_diff &lt; 0"
+                                      create="false" edit="false" delete="false">
+                                    <field name="product_id" string="Product"/>
+                                    <field name="price_before" string="Price Before"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="price_after" string="New Price"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="price_diff" string="Difference"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -99,9 +146,8 @@
                 Create your first Pricing Based Cost rate
             </p>
             <p>
-                Define dated cost-per-m² rates. The most recent rate on or before
-                the quotation date will be used to compute the sale price.
-                Category-specific rates take priority over global rates.
+                When saved, all area-priced products will have their Sales Price
+                updated automatically. A full before/after log is stored on each rate record.
             </p>
         </field>
     </record>

@@ -8,20 +8,15 @@ class ProductAreaCost(models.Model):
     Pricing Based Cost Rate Table.
 
     When a new rate is saved, all products with use_area_pricing=True
-    get their lst_price updated as: default_width x default_height x rate.
-
-    Odoo's standard pricelist engine then runs on lst_price normally —
-    discounts, fixed prices, qty breaks all work out of the box.
+    get their list_price updated as: default_width x default_height x rate.
+    A snapshot of before/after prices is stored in product.area.cost.line
+    for audit and review.
     """
     _name = 'product.area.cost'
     _description = 'Pricing Based Cost Rate'
     _order = 'date desc, id desc'
 
-    name = fields.Char(
-        string='Reference',
-        required=True,
-        help='e.g. "March 2025 Rate Increase"',
-    )
+    name = fields.Char(string='Reference', required=True)
     date = fields.Date(
         string='Effective Date',
         required=True,
@@ -41,8 +36,7 @@ class ProductAreaCost(models.Model):
     categ_id = fields.Many2one(
         'product.category',
         string='Product Category',
-        help='Leave empty to apply to ALL categories. '
-             'A category-specific record takes priority over a global one.',
+        help='Leave empty to apply to ALL categories.',
     )
     notes = fields.Text(string='Notes')
     active = fields.Boolean(default=True)
@@ -52,12 +46,21 @@ class ProductAreaCost(models.Model):
         default=lambda self: self.env.company,
         required=True,
     )
+    affected_line_ids = fields.One2many(
+        'product.area.cost.line',
+        'cost_rate_id',
+        string='Affected Products',
+        readonly=True,
+    )
     updated_product_count = fields.Integer(
         string='Products Updated',
-        readonly=True,
-        default=0,
-        help='Number of products whose Sales Price was updated when this rate was saved.',
+        compute='_compute_updated_product_count',
     )
+
+    @api.depends('affected_line_ids')
+    def _compute_updated_product_count(self):
+        for rec in self:
+            rec.updated_product_count = len(rec.affected_line_ids)
 
     @api.constrains('rate')
     def _check_rate_positive(self):
@@ -81,77 +84,50 @@ class ProductAreaCost(models.Model):
 
     def _update_product_prices(self):
         """
-        Update lst_price for all products with use_area_pricing = True
-        that match this rate's category scope.
-
-        Price = default_width x default_height x self.rate
-
-        Products with no default dimensions set are skipped (price would be 0).
+        Update list_price for all area-priced products in scope.
+        Stores a before/after snapshot in product.area.cost.line.
         """
         self.ensure_one()
 
         domain = [('use_area_pricing', '=', True)]
-
-        # Category scope: if this rate has a category, only update that category
-        # If global (no category), update ALL area-priced products
         if self.categ_id:
             domain.append(('categ_id', 'child_of', self.categ_id.id))
 
         products = self.env['product.template'].search(domain)
 
-        count = 0
+        # Clear previous snapshot lines for this rate record
+        self.affected_line_ids.unlink()
+
+        lines_to_create = []
         for product in products:
             if product.default_width > 0 and product.default_height > 0:
+                price_before = product.list_price
                 new_price = product.default_width * product.default_height * self.rate
                 product.list_price = new_price
-                count += 1
+                lines_to_create.append({
+                    'cost_rate_id': self.id,
+                    'product_id': product.id,
+                    'price_before': price_before,
+                    'price_after': new_price,
+                })
 
-        self.updated_product_count = count
+        if lines_to_create:
+            self.env['product.area.cost.line'].create(lines_to_create)
 
-    def action_preview_update(self):
-        """
-        Show a preview of which products will be updated and their new prices,
-        without actually saving. Useful before committing a rate change.
-        """
+    def action_view_affected_products(self):
         self.ensure_one()
-        domain = [('use_area_pricing', '=', True)]
-        if self.categ_id:
-            domain.append(('categ_id', 'child_of', self.categ_id.id))
-
-        products = self.env['product.template'].search(domain)
-        lines = []
-        for p in products:
-            if p.default_width > 0 and p.default_height > 0:
-                new_price = p.default_width * p.default_height * self.rate
-                lines.append(
-                    f"  • {p.name}: {p.default_width} x {p.default_height} x "
-                    f"{self.rate} = {new_price:.2f}"
-                )
-
-        msg = _('%d product(s) will be updated:\n\n%s') % (
-            len(lines), '\n'.join(lines) if lines else _('None')
-        )
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Preview: Products to be Updated'),
-                'message': msg,
-                'sticky': True,
-                'type': 'info',
-            },
+            'name': _('Affected Products – %s') % self.name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.area.cost.line',
+            'view_mode': 'tree',
+            'domain': [('cost_rate_id', '=', self.id)],
+            'context': {'default_cost_rate_id': self.id},
         }
 
     @api.model
     def get_rate_for_product(self, product_id, ref_date=None):
-        """
-        Return the applicable rate (float) for a given product on ref_date.
-        Used for snapshotting the rate on SO lines at the time of order creation.
-
-        Priority:
-          1. Most recent record with date <= ref_date AND categ matches product
-          2. Most recent record with date <= ref_date AND categ = False (global)
-        """
+        """Return the applicable rate for a product on ref_date (for SO snapshots)."""
         if not product_id:
             return 0.0
 
@@ -180,3 +156,52 @@ class ProductAreaCost(models.Model):
             limit=1,
         )
         return global_rate.rate if global_rate else 0.0
+
+
+class ProductAreaCostLine(models.Model):
+    """
+    Snapshot of product price changes triggered by a Pricing Based Cost rate.
+    One record per affected product per rate change.
+    """
+    _name = 'product.area.cost.line'
+    _description = 'Pricing Based Cost – Affected Product'
+    _order = 'product_id asc'
+
+    cost_rate_id = fields.Many2one(
+        'product.area.cost',
+        string='Cost Rate',
+        required=True,
+        ondelete='cascade',
+    )
+    product_id = fields.Many2one(
+        'product.template',
+        string='Product',
+        required=True,
+        readonly=True,
+    )
+    price_before = fields.Float(
+        string='Price Before',
+        digits=(16, 2),
+        readonly=True,
+    )
+    price_after = fields.Float(
+        string='New Price',
+        digits=(16, 2),
+        readonly=True,
+    )
+    price_diff = fields.Float(
+        string='Difference',
+        digits=(16, 2),
+        compute='_compute_price_diff',
+        store=True,
+    )
+    currency_id = fields.Many2one(
+        related='cost_rate_id.currency_id',
+        store=True,
+        readonly=True,
+    )
+
+    @api.depends('price_before', 'price_after')
+    def _compute_price_diff(self):
+        for line in self:
+            line.price_diff = line.price_after - line.price_before
