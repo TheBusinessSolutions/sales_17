@@ -45,26 +45,6 @@
         </field>
     </record>
 
-    <!-- ── Sale Order Line Form popup: show area fields ───────────────────── -->
-    <record id="view_sale_order_line_area_pricing" model="ir.ui.view">
-        <field name="name">sale.order.line.area.pricing</field>
-        <field name="model">sale.order.line</field>
-        <field name="inherit_id" ref="sale.view_order_line_form"/>
-        <field name="arch" type="xml">
 
-            <xpath expr="//field[@name='product_id']" position="after">
-                <field name="is_area_priced" invisible="1"/>
-                <group string="Area Pricing Dimensions"
-                       invisible="not is_area_priced">
-                    <field name="area_width" string="Width (m)"/>
-                    <field name="area_height" string="Height (m)"/>
-                    <field name="area_sqm" string="Area (m²)" readonly="1"/>
-                    <field name="applied_cost_rate" string="Applied Rate (per m²)" readonly="1"/>
-                    <field name="applied_cost_rate_id" string="Cost Rate Record" readonly="1"/>
-                </group>
-            </xpath>
-
-        </field>
-    </record>
 
 </odoo>
