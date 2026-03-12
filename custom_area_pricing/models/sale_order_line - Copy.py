@@ -20,8 +20,8 @@ class SaleOrder(models.Model):
 
         for line in self.order_line:
             if line.product_id and line.product_id.use_area_pricing:
-                line._set_area_base_price(ref_date=today)
-                line._onchange_discount()
+                # Force today's date for the rate lookup
+                line._compute_area_price(ref_date=today)
                 recalculated += 1
 
         if recalculated == 0:
@@ -104,17 +104,23 @@ class SaleOrderLine(models.Model):
             )
 
     # ─────────────────────────────────────────────────────────────────────────
-    # Core: compute and store area base price + rate snapshot
+    # Core pricing logic
     # ─────────────────────────────────────────────────────────────────────────
 
-    def _set_area_base_price(self, ref_date=None):
+    def _compute_area_price(self, ref_date=None):
         """
-        Step 1 of pricing:
-        Compute base_price = Width x Height x Pricing Based Cost Rate
-        and store it as price_unit + snapshot the rate used.
+        Compute and set price_unit for area-priced lines.
 
-        Pricelist is NOT applied here — Odoo's standard engine handles
-        that automatically via _get_display_price override below.
+        Flow:
+          1. base_price = area_sqm × Pricing Based Cost rate
+          2. Apply pricelist rule:
+             a. Fixed Price rule  → use fixed price directly (pricelist wins)
+             b. Discount % rule   → base_price × (1 - discount%)
+             c. No rule           → use base_price as-is
+          3. Snapshot applied_cost_rate and applied_cost_rate_id
+
+        ref_date: date to use for cost lookup.
+                  Defaults to order date (for initial calc) or today (for recalc).
         """
         CostRate = self.env['product.area.cost']
 
@@ -122,72 +128,119 @@ class SaleOrderLine(models.Model):
             if not line.product_id or not line.product_id.use_area_pricing:
                 continue
 
+            # ── Determine reference date ──────────────────────────────────
             lookup_date = ref_date or (
                 line.order_id.date_order.date()
                 if line.order_id.date_order
                 else fields.Date.context_today(line)
             )
 
+            # ── Fetch rate ────────────────────────────────────────────────
             rate_record = CostRate.get_rate_record_for_product(
                 line.product_id.id, ref_date=lookup_date
             )
             rate = rate_record.rate if rate_record else 0.0
-            area = (line.area_width or 0.0) * (line.area_height or 0.0)
+
+            # ── Compute area (use stored value) ───────────────────────────
+            area = line.area_sqm or (line.area_width * line.area_height)
+
+            # ── Base price ────────────────────────────────────────────────
             base_price = area * rate
 
-            line.price_unit = base_price
+            # ── Apply pricelist ───────────────────────────────────────────
+            final_price = line._apply_pricelist_to_area_price(base_price)
+
+            # ── Write values ──────────────────────────────────────────────
+            line.price_unit = final_price
             line.applied_cost_rate = rate
             line.applied_cost_rate_id = rate_record.id if rate_record else False
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # Override _get_display_price so Odoo's pricelist engine uses our base price
-    # ─────────────────────────────────────────────────────────────────────────
-
-    def _get_display_price(self):
+    def _apply_pricelist_to_area_price(self, base_price):
         """
-        For area-priced products: return the area-computed base price as the
-        'list price' that the pricelist engine applies its rules against.
+        Apply pricelist rules to the area-computed base_price.
 
-          - Percentage discount rule  -> base_price shown, discount% applied
-          - Fixed price rule          -> fixed price wins (standard behaviour)
-          - No rule                   -> base_price used as-is
+        Pricelist priority (pricelist WINS over formula):
+          1. Fixed Price rule for this product/category → return fixed price
+          2. Percentage Discount rule                  → base_price × (1 - disc%)
+          3. No matching rule                          → return base_price
 
-        All standard Odoo pricelist behaviour is preserved unchanged.
+        Returns the final unit price (float).
         """
         self.ensure_one()
-        if self.product_id and self.product_id.use_area_pricing:
-            return self.price_unit
-        return super()._get_display_price()
+        pricelist = self.order_id.pricelist_id
+        if not pricelist or base_price == 0.0:
+            return base_price
+
+        product = self.product_id
+        qty = self.product_uom_qty or 1.0
+        date = self.order_id.date_order or fields.Datetime.now()
+        uom = self.product_uom
+
+        # Odoo 17: use _get_product_rule to find the matching pricelist item
+        rule_id = pricelist._get_product_rule(
+            product, qty, uom=uom, date=date
+        )
+
+        if not rule_id:
+            # No matching rule — return base price as-is
+            return base_price
+
+        rule = self.env['product.pricelist.item'].browse(rule_id)
+
+        if rule.compute_price == 'fixed':
+            # Fixed price rule — pricelist wins completely, ignore area formula
+            self.discount = 0.0
+            return rule.fixed_price
+
+        elif rule.compute_price == 'percentage':
+            # Discount % on top of our area-computed base price
+            discount_pct = rule.percent_price or 0.0
+            self.discount = discount_pct
+            # price_unit = base_price; discount shown separately on the line
+            return base_price
+
+        # Formula or other rule types — return base price unchanged
+        return base_price
 
     # ─────────────────────────────────────────────────────────────────────────
-    # Onchange hooks
+    # Onchange / override hooks
     # ─────────────────────────────────────────────────────────────────────────
 
     @api.onchange('product_id')
     def _onchange_product_id_area(self):
-        """Populate default dimensions when area-priced product is selected."""
+        """Populate default dimensions when product is selected."""
         if self.product_id and self.product_id.use_area_pricing:
             self.area_width = self.product_id.default_width
             self.area_height = self.product_id.default_height
-            self._set_area_base_price()
-            self._onchange_discount()
+            # Trigger price computation after dimensions are set
+            self._compute_area_price()
 
     @api.onchange('area_width', 'area_height')
     def _onchange_dimensions(self):
         """Recompute price when dimensions change."""
         if self.product_id and self.product_id.use_area_pricing:
-            self._set_area_base_price()
-            self._onchange_discount()
+            self._compute_area_price()
 
     @api.onchange('product_uom_qty')
     def _onchange_qty_area(self):
-        """Recompute when qty changes (pricelist qty-break rules may apply)."""
+        """Recompute price when qty changes (pricelist qty breaks may apply)."""
         if self.product_id and self.product_id.use_area_pricing:
-            self._set_area_base_price()
-            self._onchange_discount()
+            self._compute_area_price()
+
+    def _get_display_price(self):
+        """
+        Override Odoo's standard price getter for area-priced products.
+        Returns the area-computed price instead of the standard pricelist price.
+        """
+        self.ensure_one()
+        if self.product_id and self.product_id.use_area_pricing:
+            # Trigger area price computation and return current price_unit
+            self._compute_area_price()
+            return self.price_unit
+        return super()._get_display_price()
 
     # ─────────────────────────────────────────────────────────────────────────
-    # Override create to ensure area pricing on programmatic line creation
+    # Override create/write to ensure area pricing is applied on save
     # ─────────────────────────────────────────────────────────────────────────
 
     @api.model_create_multi
@@ -195,5 +248,5 @@ class SaleOrderLine(models.Model):
         lines = super().create(vals_list)
         for line in lines:
             if line.product_id and line.product_id.use_area_pricing:
-                line._set_area_base_price()
+                line._compute_area_price()
         return lines
