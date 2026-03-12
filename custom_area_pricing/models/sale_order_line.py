@@ -21,7 +21,6 @@ class SaleOrder(models.Model):
         for line in self.order_line:
             if line.product_id and line.product_id.use_area_pricing:
                 line._set_area_base_price(ref_date=today)
-                line._onchange_discount()
                 recalculated += 1
 
         if recalculated == 0:
@@ -170,21 +169,18 @@ class SaleOrderLine(models.Model):
             self.area_width = self.product_id.default_width
             self.area_height = self.product_id.default_height
             self._set_area_base_price()
-            self._onchange_discount()
 
     @api.onchange('area_width', 'area_height')
     def _onchange_dimensions(self):
         """Recompute price when dimensions change."""
         if self.product_id and self.product_id.use_area_pricing:
             self._set_area_base_price()
-            self._onchange_discount()
 
     @api.onchange('product_uom_qty')
     def _onchange_qty_area(self):
         """Recompute when qty changes (pricelist qty-break rules may apply)."""
         if self.product_id and self.product_id.use_area_pricing:
             self._set_area_base_price()
-            self._onchange_discount()
 
     # ─────────────────────────────────────────────────────────────────────────
     # Override create to ensure area pricing on programmatic line creation
