@@ -1,23 +1,26 @@
-# Arabic translation for custom_area_pricing
-# Copyright (C) 2025
-# License: LGPL-3
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * custom_area_pricing
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-01 00:00+0000\n"
-"PO-Revision-Date: 2026-03-14 16:15+0200\n"
+"PO-Revision-Date: 2026-03-14 16:21+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: Poedit 3.9\n"
 
 #. module: custom_area_pricing
-#: model:product.area.cost,description:0
+msgid "Pricing Based Cost"
+msgstr "التكلفة القائمة على التسعير"
+
+#. module: custom_area_pricing
 msgid "Pricing Based Cost Rate"
 msgstr "سعر التكلفة القائم على التسعير"
 
@@ -26,12 +29,8 @@ msgid "Pricing Based Cost Rates"
 msgstr "أسعار التكلفة القائمة على التسعير"
 
 #. module: custom_area_pricing
-msgid "Pricing Based Cost"
+msgid "Pricing Based Cost (per m\\u00b2)"
 msgstr "التكلفة القائمة على التسعير"
-
-#. module: custom_area_pricing
-msgid "Pricing Based Cost (per m²)"
-msgstr "التكلفة القائمة على التسعير (لكل م²)"
 
 #. module: custom_area_pricing
 msgid "Reference"
@@ -42,20 +41,8 @@ msgid "Effective Date"
 msgstr "تاريخ السريان"
 
 #. module: custom_area_pricing
-msgid "Currency"
-msgstr "العملة"
-
-#. module: custom_area_pricing
-msgid "Product Category"
-msgstr "فئة المنتج"
-
-#. module: custom_area_pricing
-msgid "Notes"
-msgstr "ملاحظات"
-
-#. module: custom_area_pricing
 msgid "Status"
-msgstr "الحالة"
+msgstr "الحاله"
 
 #. module: custom_area_pricing
 msgid "Draft"
@@ -82,10 +69,6 @@ msgid "Affected Products"
 msgstr "المنتجات المتأثرة"
 
 #. module: custom_area_pricing
-msgid "Affected Products – %s"
-msgstr "المنتجات المتأثرة – %s"
-
-#. module: custom_area_pricing
 msgid "Product"
 msgstr "المنتج"
 
@@ -104,10 +87,6 @@ msgstr "الفرق"
 #. module: custom_area_pricing
 msgid "Enable Area-Based Pricing"
 msgstr "تفعيل التسعير القائم على المساحة"
-
-#. module: custom_area_pricing
-msgid "Use Area Pricing"
-msgstr "استخدام التسعير بالمساحة"
 
 #. module: custom_area_pricing
 msgid "Default Width (m)"
@@ -130,40 +109,20 @@ msgid "Height (m)"
 msgstr "الارتفاع (م)"
 
 #. module: custom_area_pricing
-msgid "Area (m²)"
-msgstr "المساحة (م²)"
+msgid "Area (m\\u00b2)"
+msgstr "المساحة (م\\u00b2)"
 
 #. module: custom_area_pricing
-msgid "W (m)"
-msgstr "ع (م)"
-
-#. module: custom_area_pricing
-msgid "H (m)"
-msgstr "ط (م)"
-
-#. module: custom_area_pricing
-msgid "Rate/m²"
-msgstr "السعر/م²"
-
-#. module: custom_area_pricing
-msgid "Rate Used (per m²)"
-msgstr "السعر المُستخدَم (لكل م²)"
+msgid "Rate Used (per m\\u00b2)"
+msgstr "السعر المُستخدَم (لكل م\\u00b2)"
 
 #. module: custom_area_pricing
 msgid "Area Priced"
 msgstr "مسعَّر بالمساحة"
 
 #. module: custom_area_pricing
-msgid "↻ Recalculate Area Prices"
-msgstr "↻ إعادة حساب أسعار المساحة"
-
-#. module: custom_area_pricing
 msgid "Prices Recalculated"
 msgstr "تمت إعادة حساب الأسعار"
-
-#. module: custom_area_pricing
-msgid "%d line(s) refreshed to current pricing."
-msgstr "تم تحديث %d سطر/أسطر وفق التسعير الحالي."
 
 #. module: custom_area_pricing
 msgid "You can only recalculate prices on draft quotations."
@@ -186,37 +145,9 @@ msgid "A Pricing Based Cost rate already exists for this date and category. Plea
 msgstr "يوجد بالفعل سعر تكلفة لهذا التاريخ والفئة. يرجى استخدام تاريخ مختلف أو أرشفة السجل الحالي أولاً."
 
 #. module: custom_area_pricing
-msgid "An applied rate already exists for this date and category: %s. Please archive it before applying a new one."
-msgstr "يوجد بالفعل سعر مُطبَّق لهذا التاريخ والفئة: %s. يرجى أرشفته قبل تطبيق سعر جديد."
-
-#. module: custom_area_pricing
-msgid "Category (blank = All)"
-msgstr "الفئة (فارغ = الكل)"
-
-#. module: custom_area_pricing
-msgid "Company"
-msgstr "الشركة"
-
-#. module: custom_area_pricing
-msgid "Global (All Categories)"
-msgstr "عام (جميع الفئات)"
-
-#. module: custom_area_pricing
-msgid "Month"
-msgstr "الشهر"
-
-#. module: custom_area_pricing
-msgid "This will update the Sales Price of all matching area-priced products. Continue?"
-msgstr "سيؤدي هذا إلى تحديث سعر البيع لجميع المنتجات المسعَّرة بالمساحة المطابقة. هل تريد المتابعة؟"
-
-#. module: custom_area_pricing
 msgid "Leave empty to apply to ALL categories."
 msgstr "اتركه فارغاً للتطبيق على جميع الفئات."
 
 #. module: custom_area_pricing
-msgid "The active Pricing Based Cost rate at the time this quotation was created."
-msgstr "سعر التكلفة القائم على التسعير النشط عند إنشاء عرض الأسعار هذا."
-
-#. module: custom_area_pricing
-msgid "Refresh all area-priced lines to the current Pricing Based Cost rate."
-msgstr "تحديث جميع أسطر المنتجات المسعَّرة بالمساحة وفق سعر التكلفة الحالي."
+msgid "This will update the Sales Price of all matching area-priced products. Continue?"
+msgstr "سيؤدي هذا إلى تحديث سعر البيع لجميع المنتجات المسعَّرة بالمساحة المطابقة. هل تريد المتابعة؟"
