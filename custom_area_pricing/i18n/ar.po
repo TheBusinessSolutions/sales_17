@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#      * custom_area_pricing
+# 	* custom_area_pricing
 #
 msgid ""
 msgstr ""
@@ -10,6 +10,7 @@ msgstr ""
 "PO-Revision-Date: 2026-03-14 14:32+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,7 +25,7 @@ msgstr "تم تحديث عدد %d بند بالأسعار الحالية."
 
 #. module: custom_area_pricing
 #. odoo-python
-#: code:addons/custom_area_pricing/models/sale_order_line - Copy.py:0
+#: code:addons/custom_area_pricing/models/sale_order_line.py:0
 #, python-format
 msgid ""
 "%d line(s) updated using the latest Pricing Based Cost as of today (%s)."
@@ -151,18 +152,6 @@ msgid "Default Width (m)"
 msgstr "العرض الافتراضي (م)"
 
 #. module: custom_area_pricing
-#: model:ir.model.fields,help:custom_area_pricing.field_product_product__default_height
-#: model:ir.model.fields,help:custom_area_pricing.field_product_template__default_height
-msgid "Default height in meters. Can be overridden on each quotation line."
-msgstr "الارتفاع الافتراضي بالمتر. وممكن تغيره في كل بند في عرض السعر."
-
-#. module: custom_area_pricing
-#: model:ir.model.fields,help:custom_area_pricing.field_product_product__default_width
-#: model:ir.model.fields,help:custom_area_pricing.field_product_template__default_width
-msgid "Default width in meters. Can be overridden on each quotation line."
-msgstr "العرض الافتراضي بالمتر. وممكن تغيره في كل بند في عرض السعر."
-
-#. module: custom_area_pricing
 #: model:ir.model.fields,field_description:custom_area_pricing.field_product_area_cost_line__price_diff
 #: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_form
 #: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_line_tree
@@ -225,11 +214,6 @@ msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
 #. module: custom_area_pricing
-#: model:ir.model.fields,help:custom_area_pricing.field_product_area_cost__categ_id
-msgid "Leave empty to apply to ALL categories."
-msgstr "سيبها فاضية عشان تطبق على كل الفئات."
-
-#. module: custom_area_pricing
 #: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_search
 msgid "Month"
 msgstr "الشهر"
@@ -243,7 +227,6 @@ msgstr "السعر الجديد"
 
 #. module: custom_area_pricing
 #. odoo-python
-#: code:addons/custom_area_pricing/models/sale_order_line - Copy.py:0
 #: code:addons/custom_area_pricing/models/sale_order_line.py:0
 #, python-format
 msgid "No area-priced products found on this quotation."
@@ -256,11 +239,6 @@ msgid "Notes"
 msgstr "ملاحظات"
 
 #. module: custom_area_pricing
-#: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_form
-msgid "Optional: reason for this rate, supplier reference, etc."
-msgstr "اختياري: سبب السعر ده، مرجع المورد، إلخ."
-
-#. module: custom_area_pricing
 #: model:ir.model.fields,field_description:custom_area_pricing.field_product_area_cost_line__price_before
 #: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_form
 #: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_line_tree
@@ -269,7 +247,6 @@ msgstr "السعر قبل"
 
 #. module: custom_area_pricing
 #. odoo-python
-#: code:addons/custom_area_pricing/models/sale_order_line - Copy.py:0
 #: code:addons/custom_area_pricing/models/sale_order_line.py:0
 #, python-format
 msgid "Prices Recalculated"
@@ -340,24 +317,9 @@ msgid "Products Updated"
 msgstr "المنتجات اللي اتحدثت"
 
 #. module: custom_area_pricing
-#: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_tree
-msgid "Rate (per m²)"
-msgstr "السعر (للمتر المربع)"
-
-#. module: custom_area_pricing
-#: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_form
-msgid "Rate Details"
-msgstr "تفاصيل السعر"
-
-#. module: custom_area_pricing
 #: model:ir.model.fields,field_description:custom_area_pricing.field_sale_order_line__applied_cost_rate
 msgid "Rate Used (per m²)"
 msgstr "السعر المستخدم (للمتر المربع)"
-
-#. module: custom_area_pricing
-#: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_sale_order_area_pricing
-msgid "Rate/m²"
-msgstr "سعر المتر"
 
 #. module: custom_area_pricing
 #: model:ir.model.fields,field_description:custom_area_pricing.field_product_area_cost__name
@@ -380,32 +342,10 @@ msgid "Sales Order Line"
 msgstr "بند أمر البيع"
 
 #. module: custom_area_pricing
-#: model_terms:ir.actions.act_window,help:custom_area_pricing.action_product_area_cost
-msgid ""
-"Save the rate in Draft, then click <b>Apply Rate</b> to update\n"
-"                all area-priced product prices. A full before/after log is stored\n"
-"                on each applied rate record."
-msgstr ""
-"احفظ السعر في حالة مسودة، وبعدين دوس على <b>تطبيق السعر</b> عشان تحدث\n"
-"                كل أسعار المنتجات اللي بتتسعر بالمساحة. فيه سجل كامل (قبل/بعد) بيتحفظ\n"
-"                على كل عملية تطبيق سعر."
-
-#. module: custom_area_pricing
-#: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_form
-msgid "Scope"
-msgstr "النطاق"
-
-#. module: custom_area_pricing
 #: model:ir.model.fields,field_description:custom_area_pricing.field_product_area_cost__state
 #: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_tree
 msgid "Status"
 msgstr "الحالة"
-
-#. module: custom_area_pricing
-#: model:ir.model.fields,help:custom_area_pricing.field_sale_order__area_cost_rate_id
-msgid ""
-"The active Pricing Based Cost rate at the time this quotation was created."
-msgstr "معدل تكلفة التسعير النشط وقت ما عرض السعر ده اتعمل."
 
 #. module: custom_area_pricing
 #. odoo-python
@@ -413,13 +353,6 @@ msgstr "معدل تكلفة التسعير النشط وقت ما عرض الس�
 #, python-format
 msgid "This rate has already been applied."
 msgstr "السعر ده اطبق خلاص."
-
-#. module: custom_area_pricing
-#: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_form
-msgid ""
-"This will update the Sales Price of all matching area-priced products. "
-"Continue?"
-msgstr "ده هيحدث سعر البيع لكل المنتجات المسعرة بالمساحة. تحب تكمل؟"
 
 #. module: custom_area_pricing
 #: model:ir.model.fields,field_description:custom_area_pricing.field_product_product__use_area_pricing
@@ -433,34 +366,16 @@ msgid "W (m)"
 msgstr "ع (م)"
 
 #. module: custom_area_pricing
-#: model:ir.model.fields,help:custom_area_pricing.field_product_product__use_area_pricing
-#: model:ir.model.fields,help:custom_area_pricing.field_product_template__use_area_pricing
-msgid ""
-"When enabled, the sales price is computed as:\n"
-"  Width × Height × Pricing Based Cost Rate\n"
-"The standard product Cost (standard_price) is unaffected."
-msgstr ""
-"لما تشغله، سعر البيع هيتحسب كالتالي:\n"
-"  العرض × الارتفاع × معدل تكلفة التسعير\n"
-"تكلفة المنتج العادية (التكلفة القياسية) مش هتتأثر."
-
-#. module: custom_area_pricing
 #: model:ir.model.fields,field_description:custom_area_pricing.field_sale_order_line__area_width
 msgid "Width (m)"
 msgstr "العرض (م)"
 
 #. module: custom_area_pricing
 #. odoo-python
-#: code:addons/custom_area_pricing/models/sale_order_line - Copy.py:0
 #: code:addons/custom_area_pricing/models/sale_order_line.py:0
 #, python-format
 msgid "You can only recalculate prices on draft quotations."
 msgstr "تقدر تعيد حساب الأسعار بس في عروض الأسعار اللي في حالة مسودة."
-
-#. module: custom_area_pricing
-#: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_product_area_cost_form
-msgid "e.g. March 2025 Rate Increase"
-msgstr "مثلاً: زيادة أسعار مارس 2025"
 
 #. module: custom_area_pricing
 #: model_terms:ir.ui.view,arch_db:custom_area_pricing.view_sale_order_area_pricing
