@@ -125,7 +125,7 @@ class ProductAreaCost(models.Model):
             if product.default_width > 0 and product.default_height > 0:
                 price_before = product.list_price
                 new_price = product.default_width * product.default_height * self.rate
-                product.list_price = new_price
+                product.standard_price = new_price
                 lines_to_create.append({
                     'cost_rate_id': self.id,
                     'product_id': product.id,
