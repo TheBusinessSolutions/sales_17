@@ -114,8 +114,8 @@ msgstr "السعر المُستخدَم (لكل م²)"
 msgid "Area Priced"
 msgstr "مسعَّر بالمساحة"
 
-msgid "↻ Recalculate Area Prices"
-msgstr "↻ إعادة حساب أسعار المساحة"
+msgid "Recalculate Area Prices"
+msgstr "إعادة حساب أسعار المساحة"
 
 msgid "Applied Cost Rate"
 msgstr "سعر التكلفة المُطبَّق"
