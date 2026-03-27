@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_inherit_display_config" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//td[@name='td_name']" position="replace">
+            <td name="td_name">
+                <t t-if="line.product_id">
+                    <t t-if="doc.company_id.print_product_name and doc.company_id.print_product_description">
+                        <span t-field="line.product_id.name"/> | <span t-field="line.name"/>
+                    </t>
+                    <t t-elif="doc.company_id.print_product_name">
+                        <span t-field="line.product_id.name"/>
+                    </t>
+                    <t t-elif="doc.company_id.print_product_description">
+                        <span t-field="line.name"/>
+                    </t>
+                    <t t-else="">
+                        <span t-field="line.product_id.name"/>
+                    </t>
+                </t>
+                <t t-else="">
+                    <span t-field="line.name"/>
+                </t>
+            </td>
+        </xpath>
+    </template>
+</odoo>
