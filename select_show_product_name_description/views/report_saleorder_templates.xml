@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_saleorder_document_inherit_display_config" inherit_id="sale.report_saleorder_document">
-        <xpath expr="//td[@name='td_name']" position="replace">
-            <td name="td_name">
-                <t t-if="line.product_id">
-                    <t t-if="doc.company_id.print_product_name and doc.company_id.print_product_description">
-                        <span t-field="line.product_id.name"/> | <span t-field="line.name"/>
-                    </t>
-                    <t t-elif="doc.company_id.print_product_name">
-                        <span t-field="line.product_id.name"/>
-                    </t>
-                    <t t-elif="doc.company_id.print_product_description">
-                        <span t-field="line.name"/>
-                    </t>
-                    <t t-else="">
-                        <span t-field="line.product_id.name"/>
-                    </t>
-                </t>
-                <t t-else="">
-                    <span t-field="line.name"/>
-                </t>
-            </td>
+    <template id="report_saleorder_document_inherit_separate_cols" inherit_id="sale.report_saleorder_document">
+        
+        <xpath expr="//th[@name='th_description']" position="before">
+            <t t-if="doc.company_id.print_product_name">
+                <th name="th_product_name" class="text-start">Product Name</th>
+            </t>
         </xpath>
+
+        <xpath expr="//th[@name='th_description']" position="attributes">
+            <attribute name="t-if">doc.company_id.print_product_description</attribute>
+        </xpath>
+
+        <xpath expr="//td[@name='td_name']" position="before">
+            <t t-if="doc.company_id.print_product_name">
+                <td name="td_product_name">
+                    <span t-if="line.product_id" t-field="line.product_id.name"/>
+                </td>
+            </t>
+        </xpath>
+
+        <xpath expr="//td[@name='td_name']" position="attributes">
+            <attribute name="t-if">doc.company_id.print_product_description or (not doc.company_id.print_product_name and not doc.company_id.print_product_description)</attribute>
+        </xpath>
+
+        <xpath expr="//td[@name='td_section_line']" position="attributes">
+            <attribute name="colspan">99</attribute>
+        </xpath>
+        <xpath expr="//td[@name='td_note_line']" position="attributes">
+            <attribute name="colspan">99</attribute>
+        </xpath>
+
     </template>
 </odoo>
