@@ -6,31 +6,28 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    # =========================
-    # FIELDS
-    # =========================
+    # Approval Lines
     sale_approver_line = fields.One2many(
         'sale.approver', 'sale_id', copy=False
     )
+   # ✅ NEW: Approval Status for Tree/Form Views
+    approval_status = fields.Char(compute="_compute_approval_status", string="Approval Status")
 
+    # UI Helpers
     can_confirm_order = fields.Boolean(
-        compute="_compute_can_confirm_order",
-        store=False
+        compute="_compute_can_confirm_order"
     )
 
-    # ✅ IMPORTANT: store=True for tree view
     approval_status = fields.Char(
-        compute="_compute_approval_status",
-        store=True
+        compute="_compute_approval_display"
     )
 
     next_approver_name = fields.Char(
-        compute="_compute_approval_status",
-        store=True
+        compute="_compute_approval_display"
     )
 
     # =========================
-    # CREATE / WRITE
+    # CREATE / WRITE (SAFE ZONE)
     # =========================
     @api.model
     def create(self, vals):
@@ -45,7 +42,7 @@ class SaleOrder(models.Model):
         return res
 
     # =========================
-    # COMPUTE METHODS
+    # COMPUTE METHODS (READ ONLY)
     # =========================
     @api.depends('state', 'sale_approver_line.approved_order')
     def _compute_can_confirm_order(self):
@@ -63,47 +60,37 @@ class SaleOrder(models.Model):
 
         pending = self.sale_approver_line.filtered(
             lambda x: not x.approved_order
-        ).sorted('sequence')
+        )
 
         if not pending:
             return True
 
-        return self.env.user == pending[0].user_id
+        return self.env.user == pending.sorted('sequence')[0].user_id
 
-    @api.depends(
-        'state',
-        'sale_approver_line.approved_order',
-        'sale_approver_line.sequence',
-        'sale_approver_line.user_id'
-    )
-    def _compute_approval_status(self):
+    @api.depends('state', 'sale_approver_line', 'sale_approver_line.approved_order')
+    def _compute_approval_display(self):
         for record in self:
-
             if record.state not in ('draft', 'sent'):
                 record.approval_status = False
                 record.next_approver_name = False
                 continue
 
-            if not record.sale_approver_line:
-                record.approval_status = False
-                record.next_approver_name = False
-                continue
-
-            pending = record.sale_approver_line.filtered(
-                lambda x: not x.approved_order
-            ).sorted('sequence')
-
+            record._sync_approver_lines()
+            pending = record.sale_approver_line.filtered(lambda x: not x.approved_order)
             if not pending:
-                record.approval_status = 'Fully Approved'
+                # ✅ Wrapped in _() for translation
+                record.approval_status = _('Fully Approved')
                 record.next_approver_name = False
             else:
-                record.approval_status = 'Pending Approval'
-                record.next_approver_name = pending[0].user_id.name
-
+                # ✅ Wrapped in _() for translation
+                record.approval_status = _('Pending Approval')
+                record.next_approver_name = pending[0].user_id.name or ''
     # =========================
     # CORE LOGIC
     # =========================
     def _sync_approver_lines(self):
+        """Copy approvers from Sales Team → Sale Order"""
+
         for order in self:
 
             if not order.id:
@@ -113,6 +100,7 @@ class SaleOrder(models.Model):
                 continue
 
             existing_users = order.sale_approver_line.mapped('user_id')
+
             lines_to_create = []
 
             for line in order.team_id.sale_approver_line.sorted('sequence'):
@@ -133,6 +121,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         for order in self:
 
+            # No approval → normal confirm
             if not order.sale_approver_line:
                 return super().action_confirm()
 
@@ -142,19 +131,23 @@ class SaleOrder(models.Model):
                 lambda x: not x.approved_order
             ).sorted('sequence')
 
+            # Fully approved → confirm
             if not pending:
                 return super().action_confirm()
 
-            current = pending[0]
+            current_approver = pending[0]
 
-            if self.env.user != current.user_id:
+            # Not allowed user
+            if self.env.user != current_approver.user_id:
                 raise UserError(_(
-                    "You are not the current approver.\n"
+                    "❌ You are not the current approver.\n"
                     "Current approver: %s"
-                ) % current.user_id.name)
+                ) % current_approver.user_id.name)
 
-            current.approved_order = True
+            # Approve step
+            current_approver.approved_order = True
 
+            # Check if last approval
             remaining = order.sale_approver_line.filtered(
                 lambda x: not x.approved_order
             )
@@ -162,13 +155,40 @@ class SaleOrder(models.Model):
             if not remaining:
                 return super().action_confirm()
 
+            # Notify next
+            order._notify_next_approver()
+
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
                     'title': _('Approval Recorded'),
-                    'message': _('Waiting for: %s') %
+                    'message': _('Waiting for next approval: %s') %
                                remaining.sorted('sequence')[0].user_id.name,
                     'type': 'success',
                 }
             }
+
+    # =========================
+    # NOTIFICATION
+    # =========================
+    def _notify_next_approver(self):
+        self.ensure_one()
+
+        pending = self.sale_approver_line.filtered(
+            lambda x: not x.approved_order
+        ).sorted('sequence')
+
+        if not pending:
+            return
+
+        user = pending[0].user_id
+
+        if not user.partner_id:
+            return
+
+        self.message_post(
+            body=_("Approval required for %s") % self.name,
+            partner_ids=[user.partner_id.id],
+            subtype_xmlid='mail.mt_comment'
+        )
