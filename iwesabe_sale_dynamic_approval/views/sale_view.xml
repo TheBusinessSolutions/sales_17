@@ -5,24 +5,38 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <!-- Add Approval Status & Next Approver to Header -->
+            <xpath expr="//header" position="inside">
+                <div class="d-flex align-items-center" style="margin-top: 6px; margin-left: 10px;">
+                    <field name="approval_status" class="oe_inline fw-bold" readonly="1" 
+                           attrs="{'invisible': [('approval_status', '==', False)]}"/>
+                    <field name="next_approver_id" class="oe_inline ms-2" readonly="1" 
+                           attrs="{'invisible': [('approval_status', '!=', 'Pending Approval')]}"
+                           options="{'no_open': True}"/>
+                </div>
+            </xpath>
+
             <field name="authorized_transaction_ids" position="after">
                 <field name="can_confirm_order" invisible="1"/>
             </field>
-            <!-- First confirm button -->
+
+            <!-- First confirm button (Draft) -->
             <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
                 <attribute name="invisible">state not in ('draft') or can_confirm_order == False</attribute>
             </xpath>
-
-            <!-- Second confirm button -->
+            <!-- Second confirm button (Sent) -->
             <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
                 <attribute name="invisible">state not in ('sent') or can_confirm_order == False</attribute>
             </xpath>
+
             <notebook position="inside">
                 <page string="Approvers">
                     <field name="sale_approver_line">
                         <tree decoration-success="approved_order == True" create="0" delete="0" edit="0">
+                            <field name="sequence" invisible="1"/>
                             <field name="approved_order" invisible="1"/>
                             <field name="user_id" readonly="1" force_save="1"/>
+                            <field name="approved_order" widget="boolean_toggle" readonly="1"/>
                         </tree>
                         <form>
                             <field name="user_id" readonly="1" force_save="1" options="{'no_open':True}"/>
