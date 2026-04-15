@@ -1,62 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    
-    <!-- ✅ RECORD 1: Form View Inheritance -->
+
+    <!-- =========================
+         FORM VIEW
+    ========================== -->
     <record id="form_sale_order_approver" model="ir.ui.view">
-        <field name="name">sale.order_approver</field>
+        <field name="name">sale.order.approver</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
 
-            <!-- Add hidden fields for logic -->
+            <!-- Hidden fields -->
             <field name="authorized_transaction_ids" position="after">
                 <field name="can_confirm_order" invisible="1"/>
                 <field name="approval_status" invisible="1"/>
                 <field name="next_approver_name" invisible="1"/>
             </field>
 
-            <!-- Add status display in header -->
+            <!-- Header Status -->
             <xpath expr="//header" position="inside">
                 <div class="d-flex align-items-center mt-2 ms-2"
-                     invisible="approval_status == False">
+                     invisible="not approval_status">
+
                     <span class="badge bg-warning text-dark me-2">
                         <i class="fa fa-clock-o"/>
                         <field name="approval_status" readonly="1"/>
                     </span>
+
                     <span class="text-muted small"
-                          invisible="next_approver_name == False">
+                          invisible="not next_approver_name">
                         Next:
                         <field name="next_approver_name" readonly="1"/>
                     </span>
                 </div>
             </xpath>
 
-            <!-- First confirm button (Draft) -->
+            <!-- Confirm button control -->
             <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
-                <attribute name="invisible">state != 'draft' or can_confirm_order == False</attribute>
+                <attribute name="invisible">
+                    state != 'draft' or not can_confirm_order
+                </attribute>
             </xpath>
 
-            <!-- Second confirm button (Sent) -->
             <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
-                <attribute name="invisible">state != 'sent' or can_confirm_order == False</attribute>
+                <attribute name="invisible">
+                    state != 'sent' or not can_confirm_order
+                </attribute>
             </xpath>
 
             <!-- Approvers tab -->
             <xpath expr="//notebook" position="inside">
                 <page string="Approvers">
                     <field name="sale_approver_line">
-                        <tree decoration-success="approved_order" create="0" delete="0" edit="0">
+                        <tree create="0" delete="0" edit="0"
+                              decoration-success="approved_order">
                             <field name="sequence" invisible="1"/>
-                            <field name="approved_order" invisible="1"/>
-                            <field name="user_id" readonly="1"/>
-                            <field name="approved_order" widget="boolean_toggle" readonly="1"/>
+                            <field name="user_id"/>
+                            <field name="approved_order"
+                                   widget="boolean_toggle"/>
                         </tree>
-                        <form>
-                            <group>
-                                <field name="user_id" readonly="1" options="{'no_open': True}"/>
-                                <field name="approved_order" readonly="1"/>
-                            </group>
-                        </form>
                     </field>
                 </page>
             </xpath>
@@ -64,19 +66,24 @@
         </field>
     </record>
 
+    <!-- =========================
+         TREE VIEW
+    ========================== -->
     <record id="view_sale_order_tree_approval_status" model="ir.ui.view">
         <field name="name">sale.order.tree.approval.status</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
+
             <xpath expr="//field[@name='state']" position="after">
-                <field name="approval_status" 
-                       string="حالة الموافقة" 
+                <field name="approval_status"
+                       string="Approval"
                        optional="show"
-                       decoration-warning="approval_status and 'Pending' in approval_status"
-                       decoration-success="approval_status and 'Fully' in approval_status"/>
+                       decoration-warning="approval_status == 'Pending Approval'"
+                       decoration-success="approval_status == 'Fully Approved'"/>
             </xpath>
+
         </field>
     </record>
 
