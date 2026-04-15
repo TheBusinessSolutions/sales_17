@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="form_crm_team_sale_approver" model="ir.ui.view">
+		<field name="name">crm.team_sale_approver</field>
+		<field name="model">crm.team</field>
+		<field name="inherit_id" ref="sales_team.crm_team_view_form"/>
+		<field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="sale_approvers" string="Sale Order Approver(s)">
+                    <field name="sale_approver_line">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="user_id" required="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

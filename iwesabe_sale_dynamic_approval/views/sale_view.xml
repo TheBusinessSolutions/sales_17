@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="form_sale_order_approver" model="ir.ui.view">
+        <field name="name">sale.order_approver</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="authorized_transaction_ids" position="after">
+                <field name="can_confirm_order" invisible="1"/>
+            </field>
+            <!-- First confirm button -->
+            <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
+                <attribute name="invisible">state not in ('draft') or can_confirm_order == False</attribute>
+            </xpath>
+
+            <!-- Second confirm button -->
+            <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+                <attribute name="invisible">state not in ('sent') or can_confirm_order == False</attribute>
+            </xpath>
+            <notebook position="inside">
+                <page string="Approvers">
+                    <field name="sale_approver_line">
+                        <tree decoration-success="approved_order == True" create="0" delete="0" edit="0">
+                            <field name="approved_order" invisible="1"/>
+                            <field name="user_id" readonly="1" force_save="1"/>
+                        </tree>
+                        <form>
+                            <field name="user_id" readonly="1" force_save="1" options="{'no_open':True}"/>
+                            <field name="approved_order" readonly="1" force_save="1"/>
+                        </form>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
