@@ -149,3 +149,17 @@ msgid ""
 msgstr ""
 "❌ أنت لست المعتمد الحالي.\n"
 "المعتمد الحالي: %s"
+
+#. module: iwesabe_sale_dynamic_approval
+#. odoo-python
+#: code:addons/iwesabe_sale_dynamic_approval/models/sale.py:0
+#, python-format
+msgid "Pending Approval"
+msgstr "بانتظار الموافقة"
+
+#. module: iwesabe_sale_dynamic_approval
+#. odoo-python
+#: code:addons/iwesabe_sale_dynamic_approval/models/sale.py:0
+#, python-format
+msgid "Fully Approved"
+msgstr "تمت الموافقة بالكامل"
