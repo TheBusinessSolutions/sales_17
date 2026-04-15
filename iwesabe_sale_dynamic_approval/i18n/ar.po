@@ -163,3 +163,27 @@ msgstr "بانتظار الموافقة"
 #, python-format
 msgid "Fully Approved"
 msgstr "تمت الموافقة بالكامل"
+
+#. module: iwesabe_sale_dynamic_approval
+#. odoo-python
+#: code:addons/iwesabe_sale_dynamic_approval/models/sale.py:0
+#, python-format
+msgid "Pending Approval"
+msgstr "بانتظار الموافقة"
+
+#. module: iwesabe_sale_dynamic_approval
+#. odoo-python
+#: code:addons/iwesabe_sale_dynamic_approval/models/sale.py:0
+#, python-format
+msgid "Fully Approved"
+msgstr "تمت الموافقة بالكامل"
+
+#. module: iwesabe_sale_dynamic_approval
+#: model:ir.model.fields,field_description:iwesabe_sale_dynamic_approval.field_sale_order__approval_status
+msgid "Approval Status"
+msgstr "حالة الموافقة"
+
+#. module: iwesabe_sale_dynamic_approval
+#: model:ir.model.fields,field_description:iwesabe_sale_dynamic_approval.field_sale_order__next_approver_name
+msgid "Next Approver Name"
+msgstr "اسم الموافق التالي"

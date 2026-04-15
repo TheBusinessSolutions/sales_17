@@ -72,6 +72,36 @@
                 </page>
             </xpath>
 
+        <!-- ✅ Tree View: Add Approval Status Column -->
+        <record id="view_sale_order_tree_approval_status" model="ir.ui.view">
+            <field name="name">sale.order.tree.approval.status</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                    <field name="approval_status" 
+                        string="حالة الموافقة" 
+                        optional="show"
+                        decoration-warning="approval_status and 'Pending' in approval_status"
+                        decoration-success="approval_status and 'Fully' in approval_status"/>
+                </xpath>
+            </field>
+        </record>
+        </field>
+    </record>
+        <!-- ✅ RECORD 2: Tree View Inheritance (SEPARATE, at same level) -->
+    <record id="view_sale_order_tree_approval_status" model="ir.ui.view">
+        <field name="name">sale.order.tree.approval.status</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="approval_status" 
+                       string="حالة الموافقة" 
+                       optional="show"
+                       decoration-warning="approval_status and 'Pending' in approval_status"
+                       decoration-success="approval_status and 'Fully' in approval_status"/>
+            </xpath>
         </field>
     </record>
 </odoo>
