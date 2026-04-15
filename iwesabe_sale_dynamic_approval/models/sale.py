@@ -80,12 +80,12 @@ class SaleOrder(models.Model):
         for record in self:
 
             if record.state not in ('draft', 'sent'):
-                record.approval_status = 'N/A'
+                record.approval_status = False
                 record.next_approver_name = False
                 continue
 
             if not record.sale_approver_line:
-                record.approval_status = 'No Approval'
+                record.approval_status = False
                 record.next_approver_name = False
                 continue
 
