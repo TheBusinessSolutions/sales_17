@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+        <record id="inherit_res_partner" model="ir.ui.view">
+            <field name="name">Res Partner</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='property_product_pricelist']" position="after">
+                    <field name="allowed_pricelist_ids" widget="many2many_tags"/>
+                </xpath>
+                <xpath expr="//field[@name='property_product_pricelist']" position="attributes">
+                    <attribute name="domain">[("id", "in", allowed_pricelist_ids)]</attribute>
+                </xpath>
+
+
+            </field>
+        </record>
+
+        <record id="inherit_sale_order_form_view" model="ir.ui.view">
+            <field name="name">sale.order.form.view.pricelist.restriction</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="allowed_pricelist_ids" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='pricelist_id']" position="attributes">
+                    <attribute name="domain">['|', ('company_id', '=', False), ('company_id', '=', company_id), ('id',
+                        'in', allowed_pricelist_ids)]
+                    </attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
