@@ -28,8 +28,7 @@ class SaleOrder(models.Model):
         Method to approve the sale order and change its state to 'sale'.
         Only users with Sales Manager or Sale Order Approver rights can call this.
         """
-        # Check if user has permission to approve
-        # REPLACE 'your_module_name' with your actual folder name, e.g., 'sale_double_approval'
+        # Check permissions again in Python for security
         if not (self.user_has_groups('sales_team.group_sale_manager') or 
                 self.user_has_groups('your_module_name.group_sale_order_approver')):
             raise UserError(_("You do not have permission to approve this sale order."))
@@ -39,8 +38,7 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         """
-        Override to add double validation logic based on company settings.
-        Confirms the sale order if conditions are met, otherwise sets state to 'to_approve'.
+        Override to add double validation logic based on settings.
         """
         # Get configuration parameters
         ir_config = self.env['ir.config_parameter'].sudo()
@@ -55,7 +53,6 @@ class SaleOrder(models.Model):
         if so_approval_enabled and self.amount_total > min_amount:
             # Check if current user is Sales Manager OR Sale Order Approver
             is_manager = self.user_has_groups('sales_team.group_sale_manager')
-            # REPLACE 'your_module_name' with your actual folder name
             is_approver = self.user_has_groups('your_module_name.group_sale_order_approver')
             
             if is_manager or is_approver:
@@ -71,7 +68,6 @@ class SaleOrder(models.Model):
 
     def action_cancel(self):
         """
-        Method to cancel the sale order and change its state to 'cancel'.
+        Method to cancel the sale order.
         """
-        self.write({'state': 'cancel'})
-        return True
+        self.write

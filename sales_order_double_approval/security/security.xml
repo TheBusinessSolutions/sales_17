@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Define the new Security Group -->
+        <!-- Define the Sale Order Approver Group -->
         <record id="group_sale_order_approver" model="res.groups">
             <field name="name">Sale Order Approver</field>
             <field name="category_id" ref="base.module_category_sales_management"/>
