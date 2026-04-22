@@ -29,6 +29,7 @@ class SaleOrder(models.Model):
         Only users with Sales Manager or Sale Order Approver rights can call this.
         """
         # Check if user has permission to approve
+        # REPLACE 'your_module_name' with your actual folder name, e.g., 'sale_double_approval'
         if not (self.user_has_groups('sales_team.group_sale_manager') or 
                 self.user_has_groups('your_module_name.group_sale_order_approver')):
             raise UserError(_("You do not have permission to approve this sale order."))
@@ -44,6 +45,7 @@ class SaleOrder(models.Model):
         # Get configuration parameters
         ir_config = self.env['ir.config_parameter'].sudo()
         so_approval_enabled = ir_config.get_param('sales_order_double_approval.so_approval', default=False)
+        
         try:
             min_amount = float(ir_config.get_param('sales_order_double_approval.so_min_amount', default=0.0))
         except ValueError:
@@ -53,6 +55,7 @@ class SaleOrder(models.Model):
         if so_approval_enabled and self.amount_total > min_amount:
             # Check if current user is Sales Manager OR Sale Order Approver
             is_manager = self.user_has_groups('sales_team.group_sale_manager')
+            # REPLACE 'your_module_name' with your actual folder name
             is_approver = self.user_has_groups('your_module_name.group_sale_order_approver')
             
             if is_manager or is_approver:
