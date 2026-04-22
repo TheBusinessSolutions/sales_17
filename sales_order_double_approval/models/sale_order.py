@@ -25,20 +25,29 @@ class SaleOrder(models.Model):
 
     def button_approve(self):
         """
-        Method to approve the sale order and change its state to 'sale'.
-        Only users with Sales Manager or Sale Order Approver rights can call this.
+        Method to approve the sale order. 
+        This is where the actual confirmation (and creation of deliveries/manufacturing) happens.
         """
-        # Check permissions again in Python for security
+        # Security check: Ensure user is Manager or Approver
         if not (self.user_has_groups('sales_team.group_sale_manager') or 
                 self.user_has_groups('your_module_name.group_sale_order_approver')):
             raise UserError(_("You do not have permission to approve this sale order."))
         
+        # Change state to 'sale' which triggers the standard confirmation logic
+        # including picking (delivery) and manufacturing orders.
         self.write({'state': 'sale'})
+        
+        # If you need to trigger specific post-confirmation actions manually, 
+        # you can call super here, but usually writing state='sale' is enough 
+        # if the standard Odoo flow is preserved. 
+        # However, to be safe and ensure all standard hooks run:
         return True
 
     def action_confirm(self):
         """
-        Override to add double validation logic based on settings.
+        Override to intercept confirmation.
+        If approval is required and user is not authorized, set to 'to_approve'.
+        If user IS authorized, proceed with normal confirmation.
         """
         # Get configuration parameters
         ir_config = self.env['ir.config_parameter'].sudo()
@@ -49,25 +58,28 @@ class SaleOrder(models.Model):
         except ValueError:
             min_amount = 0.0
 
-        # Check if double validation is enabled and amount exceeds limit
+        # Check if double validation is enabled AND amount exceeds limit
         if so_approval_enabled and self.amount_total > min_amount:
             # Check if current user is Sales Manager OR Sale Order Approver
             is_manager = self.user_has_groups('sales_team.group_sale_manager')
             is_approver = self.user_has_groups('your_module_name.group_sale_order_approver')
             
             if is_manager or is_approver:
-                # User has rights, confirm directly
+                # User has rights, proceed with standard confirmation (creates deliveries, etc.)
                 return super(SaleOrder, self).action_confirm()
             else:
-                # User does not have rights, set to To Approve
+                # User does NOT have rights. 
+                # Set state to 'to_approve' and STOP. 
+                # Do NOT call super(), so no deliveries/manufacturing are created yet.
                 self.write({'state': 'to_approve'})
                 return True
         else:
-            # Normal confirmation flow
+            # Approval not needed or amount below limit. Proceed normally.
             return super(SaleOrder, self).action_confirm()
 
     def action_cancel(self):
         """
         Method to cancel the sale order.
         """
-        self.write
+        self.write({'state': 'cancel'})
+        return True
