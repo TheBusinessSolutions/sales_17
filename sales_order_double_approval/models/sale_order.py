@@ -11,9 +11,9 @@ class SaleOrder(models.Model):
 
     def button_approve(self):
         """Approve the order and move to 'sale' state."""
-        # REPLACE 'your_module_name' with your actual module folder name
+        # REPLACE 'sales_order_double_approval' with your actual module folder name
         if not (self.user_has_groups('sales_team.group_sale_manager') or 
-                self.user_has_groups('your_module_name.group_sale_order_approver')):
+                self.user_has_groups('sales_order_double_approval.group_sale_order_approver')):
             raise UserError(_("You do not have permission to approve this sale order."))
         
         # Change state to 'sale'. This triggers deliveries/manufacturing.
@@ -32,9 +32,9 @@ class SaleOrder(models.Model):
 
         # Check if approval is needed
         if so_approval_enabled and self.amount_total > min_amount:
-            # REPLACE 'your_module_name' with your actual module folder name
+            # REPLACE 'sales_order_double_approval' with your actual module folder name
             is_manager = self.user_has_groups('sales_team.group_sale_manager')
-            is_approver = self.user_has_groups('your_module_name.group_sale_order_approver')
+            is_approver = self.user_has_groups('sales_order_double_approval.group_sale_order_approver')
             
             if is_manager or is_approver:
                 # User has rights, proceed normally

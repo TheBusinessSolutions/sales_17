@@ -10,16 +10,16 @@
             <!-- Add Approve and Cancel buttons after 'Send by Email' -->
             <xpath expr="//button[@name='action_quotation_send']" position="after">
                 
-                <!-- REPLACE 'your_module_name' with your actual module folder name -->
+                <!-- REPLACE 'sales_order_double_approval' with your actual module folder name -->
                 <button name="button_approve" string="Approve"
                         class="oe_highlight" type="object"
                         invisible="state != 'to_approve'"
-                        groups="sales_team.group_sale_manager,your_module_name.group_sale_order_approver"/>
+                        groups="sales_team.group_sale_manager,sales_order_double_approval.group_sale_order_approver"/>
                 
                 <button name="action_cancel" string="Cancel"
                         class="btn-secondary" type="object"
                         invisible="state != 'to_approve'"
-                        groups="sales_team.group_sale_manager,your_module_name.group_sale_order_approver"/>
+                        groups="sales_team.group_sale_manager,sales_order_double_approval.group_sale_order_approver"/>
             </xpath>
 
         </field>
