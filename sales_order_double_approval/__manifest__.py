@@ -10,10 +10,9 @@
     'company': 'Cybrosys Techno Solutions',
     'maintainer': 'Cybrosys Techno Solutions',
     'website': 'https://www.cybrosys.com',
-    'live_test_url': 'https://youtu.be/dQw4w9WgXcQ',
     'depends': [
         'base',
-        'sale',  # <--- THIS IS CRITICAL. Add this line.
+        'sale',
         'sales_team',
     ],
     'data': [

@@ -7,17 +7,25 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_quotation_send']" position="after">
-                <!-- Added group_sale_order_approver to the groups list -->
-                <!-- REPLACE 'your_module_name' with your actual module folder name -->
+                <!-- Approve Button -->
+                <!-- Visible ONLY when state is 'to_approve' -->
+                <!-- Visible to Sales Managers OR Sale Order Approvers -->
+                <!-- REPLACE 'sales_order_double_approval' with your actual module folder name -->
                 <button name="button_approve" string="Approve"
                         class="oe_highlight" type="object"
                         invisible="state != 'to_approve'"
-                        groups="sales_team.group_sale_manager,your_module_name.group_sale_order_approver"/>
+                        groups="sales_team.group_sale_manager,sales_order_double_approval.group_sale_order_approver"/>
                 
+                <!-- Cancel Button -->
                 <button name="action_cancel" string="Cancel"
-                        class="oe_highlight" type="object"
+                        class="btn-secondary" type="object"
                         invisible="state != 'to_approve'"
-                        groups="sales_team.group_sale_manager,your_module_name.group_sale_order_approver"/>
+                        groups="sales_team.group_sale_manager,sales_order_double_approval.group_sale_order_approver"/>
+            </xpath>
+            
+            <!-- Optional: Hide the standard 'Confirm' button when in 'to_approve' state to avoid confusion -->
+            <xpath expr="//button[@name='action_confirm']" position="attributes">
+                <attribute name="invisible">state not in ('draft', 'sent')</attribute>
             </xpath>
         </field>
     </record>

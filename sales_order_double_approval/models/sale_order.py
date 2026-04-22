@@ -26,21 +26,18 @@ class SaleOrder(models.Model):
     def button_approve(self):
         """
         Method to approve the sale order. 
-        This is where the actual confirmation (and creation of deliveries/manufacturing) happens.
+        This changes the state to 'sale', which triggers the creation of 
+        deliveries, manufacturing orders, etc.
         """
         # Security check: Ensure user is Manager or Approver
+        # REPLACE 'sales_order_double_approval' with your actual module folder name
         if not (self.user_has_groups('sales_team.group_sale_manager') or 
-                self.user_has_groups('your_module_name.group_sale_order_approver')):
+                self.user_has_groups('sales_order_double_approval.group_sale_order_approver')):
             raise UserError(_("You do not have permission to approve this sale order."))
         
-        # Change state to 'sale' which triggers the standard confirmation logic
-        # including picking (delivery) and manufacturing orders.
+        # Change state to 'sale'. 
+        # In Odoo, changing state to 'sale' via write usually triggers the necessary actions.
         self.write({'state': 'sale'})
-        
-        # If you need to trigger specific post-confirmation actions manually, 
-        # you can call super here, but usually writing state='sale' is enough 
-        # if the standard Odoo flow is preserved. 
-        # However, to be safe and ensure all standard hooks run:
         return True
 
     def action_confirm(self):
@@ -62,7 +59,8 @@ class SaleOrder(models.Model):
         if so_approval_enabled and self.amount_total > min_amount:
             # Check if current user is Sales Manager OR Sale Order Approver
             is_manager = self.user_has_groups('sales_team.group_sale_manager')
-            is_approver = self.user_has_groups('your_module_name.group_sale_order_approver')
+            # REPLACE 'sales_order_double_approval' with your actual module folder name
+            is_approver = self.user_has_groups('sales_order_double_approval.group_sale_order_approver')
             
             if is_manager or is_approver:
                 # User has rights, proceed with standard confirmation (creates deliveries, etc.)
