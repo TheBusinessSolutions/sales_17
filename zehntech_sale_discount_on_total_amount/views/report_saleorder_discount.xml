@@ -1,0 +1,39 @@
+<odoo>
+    <template id="report_saleorder_document_inherit_discount" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@name='so_total_summary']" position="after">
+            <div class="row mt-2">
+                <div class="col-6 offset-6">
+                    <table style="width: 100%; border: none; border-collapse: collapse;">
+                        <tr>
+                            <td style="border: none;"><strong>Discount Type:</strong></td>
+                            <td class="text-end" style="border: none;">
+                                <t t-esc="{'percent': 'Percent', 'amount': 'Amount'}.get(doc.discount_type, 'N/A')"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none;"><strong>Discount Rate:</strong></td>
+                            <td class="text-end" style="border: none;">
+                                <span t-field="doc.discount_rate"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: none;"><strong>Discount Amount:</strong></td>
+                            <td class="text-end" style="border: none;">
+                                <span t-field="doc.discount_amount" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                            </td>
+                        </tr>
+                        <tr><td colspan="2" style="border: none;"><hr style="border-top: 1px solid #000;"/></td></tr>
+                        <tr>
+                            <td colspan="2" class="text-end pt-2" style="border: none;">
+                                <span style="font-size: 18px; font-weight: bold;">Total Amount:</span>
+                                <span style="font-size: 18px; font-weight: bold;"
+                                      t-field="doc.amount_total"
+                                      t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

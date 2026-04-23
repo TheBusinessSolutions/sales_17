@@ -1,0 +1,728 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* zehntech_sale_discount_on_total_amount
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-20 07:14+0000\n"
+"PO-Revision-Date: 2025-05-20 12:45+0530\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.6\n"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.report_saleorder_document_inherit_discount
+msgid "<span style=\"font-size: 18px; font-weight: bold;\">Total Amount:</span>"
+msgstr "<span style=\"font-size: 18px; font-weight: bold;\">Monto total:</span>"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.report_invoice_document_inherit_discount
+msgid "<span style=\"font-size: 20px; font-weight: bold;\">Total Amount:</span>"
+msgstr "<span style=\"font-size: 18px; font-weight: bold;\">Monto total:</span>"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.report_invoice_document_inherit_discount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.report_saleorder_document_inherit_discount
+msgid "<strong>Discount Amount:</strong>"
+msgstr "<strong>Cantidad de descuento:</strong>"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.report_invoice_document_inherit_discount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.report_saleorder_document_inherit_discount
+msgid "<strong>Discount Rate:</strong>"
+msgstr "<strong>Tasa de descuento:</strong>"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.report_invoice_document_inherit_discount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.report_saleorder_document_inherit_discount
+msgid "<strong>Discount Type:</strong>"
+msgstr "<strong>Tipo de descuento:</strong>"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.sale_order_portal_content_inherit
+msgid "<strong>Discount:</strong>"
+msgstr "<strong>Descuento:</strong>"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.sale_order_portal_content_inherit
+msgid "<strong>Subtotal:</strong>"
+msgstr "<strong>Total parcial:</strong>"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.sale_order_portal_content_inherit
+msgid "<strong>Taxes:</strong>"
+msgstr "<strong>Impuestos:</strong>"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.report_invoice_document_inherit_discount
+msgid "<strong>Total amount in words:</strong>"
+msgstr "<strong>Cantidad total en palabras:</strong>"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.sale_order_portal_content_inherit
+msgid "<strong>Total:</strong>"
+msgstr ""
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_approval_wizard__action
+msgid "Action"
+msgstr "Acción"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_sale_order__terms_conditions
+msgid "Add any terms or conditions related to this order."
+msgstr "Agregue cualquier término o condición relacionado con este pedido."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields.selection,name:zehntech_sale_discount_on_total_amount.selection__bulk_discount_update_wizard__discount_type__amount
+msgid "Amount"
+msgstr "Cantidad"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_bulk_discount_approval_wizard
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_bulk_discount_update_wizard
+msgid "Apply"
+msgstr "Aplicar"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.actions.server,name:zehntech_sale_discount_on_total_amount.action_bulk_discount_update_wizard_invoice
+#: model:ir.actions.server,name:zehntech_sale_discount_on_total_amount.action_bulk_discount_update_wizard_sale
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_bulk_discount_update_wizard
+msgid "Apply Bulk Discount"
+msgstr "Aplicar descuento por volumen"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields.selection,name:zehntech_sale_discount_on_total_amount.selection__bulk_discount_approval_wizard__action__approve
+msgid "Approve"
+msgstr "Aprobar"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_move_form_inherit_discount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_order_form_inherit_discount
+msgid "Approve Discount"
+msgstr "Aprobar descuento"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__approve_immediately
+msgid "Approve Discount Immediately"
+msgstr "Aprobar descuento inmediatamente"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_approval.py:0
+#, python-format
+msgid "Bulk discount %s completed successfully."
+msgstr "Descuento por volumen %s completado exitosamente."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_move_form_inherit_discount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_order_form_inherit_discount
+msgid "Are you sure you want to reject the discount?"
+msgstr "¿Estás segura de que quieres rechazar el descuento?"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#: model:ir.actions.server,name:zehntech_sale_discount_on_total_amount.action_bulk_discount_approval_wizard
+#: model:ir.actions.server,name:zehntech_sale_discount_on_total_amount.action_bulk_discount_approval_wizard_account
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_bulk_discount_approval_wizard
+#, python-format
+msgid "Bulk Discount Approval"
+msgstr "Aprobación de descuento por volumen"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model,name:zehntech_sale_discount_on_total_amount.model_bulk_discount_approval_wizard
+msgid "Bulk Discount Approval Wizard"
+msgstr "Asistente de aprobación de descuentos por volumen"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#, python-format
+msgid "Bulk Discount Update"
+msgstr "Actualización de descuento por volumen"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model,name:zehntech_sale_discount_on_total_amount.model_bulk_discount_update_wizard
+msgid "Bulk Discount Update Wizard"
+msgstr "Asistente de actualización de descuentos por volumen"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_sale_order__discount_amount
+msgid "Calculated discount value applied to this order."
+msgstr "Valor de descuento calculado aplicado a este pedido."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_sale_order__can_approve_discount
+msgid "Can Approve Discount"
+msgstr "Puede aprobar el descuento"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_bulk_discount_approval_wizard
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_bulk_discount_update_wizard
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_approval.py:0
+#, python-format
+msgid ""
+"Cannot approve discount because the discount value is zero for some records. "
+"Please set a valid discount."
+msgstr ""
+"No se puede aprobar el descuento porque el valor del descuento es cero para "
+"algunos registros. Establezca un descuento válido."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_approval.py:0
+#, python-format
+msgid ""
+"Cannot proceed because some records have no products added. Please add at "
+"least one product before continuing."
+msgstr ""
+"No se puede continuar porque algunos registros no tienen productos añadidos. "
+"Por favor, añada al menos un producto antes de continuar."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_account_bank_statement_line__discount_type
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_account_move__discount_type
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_account_payment__discount_type
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__discount_type
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_sale_order__discount_type
+msgid "Choose whether the discount is a percentage or a fixed amount."
+msgstr "Elija si el descuento es un porcentaje o una cantidad fija."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model,name:zehntech_sale_discount_on_total_amount.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_approval_wizard__create_uid
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_approval_wizard__create_date
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_discount_analytics__currency_id
+msgid "Currency"
+msgstr "Divisa"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_move_form_inherit_discount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_order_form_inherit_discount
+msgid "Discount"
+msgstr "Descuento"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_bank_statement_line__discount_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_move__discount_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_payment__discount_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_sale_order__discount_amount
+msgid "Discount Amount"
+msgstr "Cantidad de descuento"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model,name:zehntech_sale_discount_on_total_amount.model_discount_analytics
+msgid "Discount Analytics"
+msgstr "Análisis de descuentos"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:res.groups,name:zehntech_sale_discount_on_total_amount.group_discount_approval_manager
+msgid "Discount Approval Manager"
+msgstr "Gerente de aprobación de descuentos"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_bank_statement_line__discount_rate
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_move__discount_rate
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_payment__discount_rate
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__discount_rate
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_sale_order__discount_rate
+msgid "Discount Rate"
+msgstr "Tasa de descuento"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_update.py:0
+#, python-format
+msgid "Discount Rate cannot be negative."
+msgstr "La tasa de descuento no puede ser negativa."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_update.py:0
+#, python-format
+msgid "Discount Rate cannot be negative. It has been reset to 0."
+msgstr "La tasa de descuento no puede ser negativa. Se ha restablecido a 0."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.ui.menu,name:zehntech_sale_discount_on_total_amount.menu_discount_analytics_root
+msgid "Discount Reports"
+msgstr "Informes de descuento"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.actions.act_window,name:zehntech_sale_discount_on_total_amount.action_discount_analytics
+#: model:ir.ui.menu,name:zehntech_sale_discount_on_total_amount.menu_discount_analytics
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_discount_analytics_list
+msgid "Discount Summary"
+msgstr "Resumen de descuentos"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_bank_statement_line__discount_type
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_move__discount_type
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_payment__discount_type
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__discount_type
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_sale_order__discount_type
+msgid "Discount Type"
+msgstr "Tipo de descuento"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#, python-format
+msgid "Discount approved successfully."
+msgstr "Descuento aprobado exitosamente."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.res_config_settings_view_form_discount_limit
+msgid "Discount limit (%) requiring approval"
+msgstr "Límite de descuento (%) que requiere aprobación"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_res_config_settings__discount_limit_percentage
+msgid "Discount limit requires approval in %"
+msgstr "El límite de descuento requiere aprobación en %"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#, python-format
+msgid "Discount rate cannot be negative."
+msgstr "La tasa de descuento no puede ser negativa."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_update.py:0
+#, python-format
+msgid ""
+"For some records discount amount exceeding the untaxed amount, Please check"
+msgstr ""
+"Para algunos registros cuyo importe de descuento exceda el importe no "
+"gravado, marque"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_approval_wizard__display_name
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__display_name
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_discount_analytics__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_res_config_settings__sale_discount_approval
+msgid ""
+"Enable this option to activate the approval process for discounts given on "
+"sale orders and invoices."
+msgstr ""
+"Habilite esta opción para activar el proceso de aprobación de descuentos "
+"otorgados en órdenes de venta y facturas."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__approve_immediately
+msgid ""
+"Enable this option to approve the discount automatically without requiring "
+"manual approval."
+msgstr ""
+"Habilite esta opción para aprobar el descuento automáticamente sin necesidad "
+"de aprobación manual."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_sale_order__discount_rate
+msgid ""
+"Enter the discount value. Interpreted as percentage or fixed amount based on "
+"the selected type."
+msgstr ""
+"Introduzca el valor del descuento. Se interpreta como un porcentaje o un "
+"importe fijo según el tipo seleccionado."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields.selection,name:zehntech_sale_discount_on_total_amount.selection__account_move__discount_type__amount
+#: model:ir.model.fields.selection,name:zehntech_sale_discount_on_total_amount.selection__sale_order__discount_type__amount
+msgid "Fixed Amount"
+msgstr "Monto Fijo"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_approval_wizard__id
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__id
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_discount_analytics__id
+msgid "ID"
+msgstr "IDENTIFICACIÓN"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_bulk_discount_approval_wizard__is_approval_manager
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__is_approval_manager
+msgid ""
+"Indicates whether the current user belongs to the Discount Approval Manager "
+"group."
+msgstr ""
+"Indica si el usuario actual pertenece al grupo Administrador de aprobación de "
+"descuentos."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_sale_order__can_approve_discount
+msgid "Indicates whether the current user can approve discounts."
+msgstr "Indica si el usuario actual puede aprobar descuentos."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_move_form_inherit_discount
+msgid "Invoice Discount"
+msgstr "Descuento en factura"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#, python-format
+msgid "Invoice discount approved successfully."
+msgstr "Descuento de factura aprobado exitosamente."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_discount_analytics__invoice_count
+msgid "Invoices"
+msgstr "Facturas"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_approval_wizard__is_approval_manager
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__is_approval_manager
+msgid "Is Approval Manager"
+msgstr "¿Es el gerente de aprobación?"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model,name:zehntech_sale_discount_on_total_amount.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_approval_wizard__write_uid
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Actualizado por última vez por"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_approval_wizard__write_date
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_update.py:0
+#, python-format
+msgid "Only Discount Approval Managers can apply bulk discounts."
+msgstr ""
+"Sólo los gerentes de aprobación de descuentos pueden aplicar descuentos por "
+"volumen."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields.selection,name:zehntech_sale_discount_on_total_amount.selection__account_move__discount_type__percent
+#: model:ir.model.fields.selection,name:zehntech_sale_discount_on_total_amount.selection__bulk_discount_update_wizard__discount_type__percent
+#: model:ir.model.fields.selection,name:zehntech_sale_discount_on_total_amount.selection__sale_order__discount_type__percent
+msgid "Percentage"
+msgstr "Porcentaje"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_update.py:0
+#, python-format
+msgid "Percentage discount cannot exceed 100%."
+msgstr "El porcentaje de descuento no puede exceder el 100%."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#, python-format
+msgid "Please first select the discount type."
+msgstr "Por favor seleccione primero el tipo de descuento."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#, python-format
+msgid "Please select the product first before applying discount."
+msgstr "Seleccione primero el producto antes de aplicar el descuento."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields.selection,name:zehntech_sale_discount_on_total_amount.selection__bulk_discount_approval_wizard__action__reject
+msgid "Reject"
+msgstr "Rechazar"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_move_form_inherit_discount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_order_form_inherit_discount
+msgid "Reject Discount"
+msgstr "Rechazar descuento"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_res_config_settings__sale_discount_approval
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.res_config_settings_view_form_discount_limit
+msgid "Sale Discount Approval"
+msgstr "Aprobación de descuento de venta"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_discount_analytics__order_count
+msgid "Sale Orders"
+msgstr "Órdenes de venta"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model,name:zehntech_sale_discount_on_total_amount.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_bulk_discount_approval_wizard__action
+msgid "Select whether you want to approve or reject the selected records."
+msgstr "Seleccione si desea aprobar o rechazar los registros seleccionados."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_account_bank_statement_line__discount_rate
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_account_move__discount_rate
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_account_payment__discount_rate
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_bulk_discount_update_wizard__discount_rate
+msgid ""
+"Set the discount value as percentage or amount depending on the discount type."
+msgstr ""
+"Establezca el valor del descuento como porcentaje o monto según el tipo de "
+"descuento."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_update.py:0
+#, python-format
+msgid "Some products have a discount amount greater than the total amount."
+msgstr "Algunos productos tienen un monto de descuento mayor al monto total."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_approval.py:0
+#, python-format
+msgid ""
+"Some selected records are not in 'Waiting for Discount Approval' state. "
+"Please make sure all selected records are in the correct state."
+msgstr ""
+"Algunos registros seleccionados no están en estado \"Esperando aprobación de "
+"descuento\". Asegúrese de que todos los registros seleccionados estén en el "
+"estado correcto."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_res_config_settings__discount_limit_percentage
+msgid ""
+"Specify the maximum discount percentage allowed without approval. Discounts "
+"exceeding this percentage will require manager approval."
+msgstr ""
+"Especifique el porcentaje máximo de descuento permitido sin aprobación. Los "
+"descuentos que superen este porcentaje requerirán la aprobación del gerente."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_bank_statement_line__state
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_move__state
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_account_payment__state
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_sale_order__state
+msgid "Status"
+msgstr "Estado"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_approval.py:0
+#, python-format
+msgid "Success"
+msgstr "Éxito"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_sale_order__amount_tax
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_order_form_inherit_discount
+msgid "Taxes"
+msgstr "Impuestos"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_sale_order__terms_conditions
+msgid "Terms and conditions"
+msgstr "Términos y condiciones"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_order_form_inherit_discount
+msgid "Terms and conditions..."
+msgstr "Términos y condiciones..."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_discount_analytics__currency_id
+msgid "The currency in which the total discount amount is calculated."
+msgstr "La moneda en la que se calcula el importe total del descuento."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#, python-format
+msgid "The discount amount must not exceed the untaxed total."
+msgstr "El monto del descuento no debe exceder el total no gravado."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#, python-format
+msgid "The discount percentage cannot exceed the untaxed amount (100%)."
+msgstr "El porcentaje de descuento no puede exceder el monto no gravado (100%)."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_discount_analytics__total_discount
+msgid ""
+"The total discount amount given by the user on all sale orders or invoices."
+msgstr ""
+"El monto total de descuento otorgado por el usuario en todos los pedidos de "
+"venta o facturas."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_discount_analytics__invoice_count
+msgid "The total number of invoices where the user has applied discounts."
+msgstr ""
+"El número total de facturas en las que el usuario ha aplicado descuentos."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_discount_analytics__order_count
+msgid "The total number of sale orders where the user has applied discounts."
+msgstr ""
+"El número total de pedidos de venta en los que el usuario ha aplicado "
+"descuentos."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_discount_analytics__user_id
+msgid ""
+"The user who has been assigned or associated with the discount approvals."
+msgstr ""
+"El usuario al que se le han asignado o asociado las aprobaciones de descuento."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_order_form_inherit_discount
+msgid "This is the final total after subtracting the discount."
+msgstr "Este es el total final después de restar el descuento."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.actions.act_window,help:zehntech_sale_discount_on_total_amount.action_discount_analytics
+msgid "This report summarizes discounts by user across sales and invoices."
+msgstr ""
+"Este informe resume los descuentos por usuario en todas las ventas y facturas."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_sale_order__amount_total
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_order_form_inherit_discount
+msgid "Total"
+msgstr ""
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_move_form_inherit_discount
+msgid "Total Amount"
+msgstr "Monto total"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_discount_analytics__total_discount
+msgid "Total Discount"
+msgstr "Descuento Total"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_sale_order__amount_total
+msgid "Total amount including discount and taxes."
+msgstr "Importe total incluyendo descuento e impuestos."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_sale_order__amount_untaxed
+msgid "Total amount without taxes."
+msgstr "Importe total sin impuestos."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_account_bank_statement_line__discount_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_account_move__discount_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_account_payment__discount_amount
+msgid "Total discount amount calculated based on the discount rate."
+msgstr "Importe total del descuento calculado en base a la tasa de descuento."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,help:zehntech_sale_discount_on_total_amount.field_sale_order__amount_tax
+msgid "Total tax amount for the order."
+msgstr "Importe total del impuesto del pedido."
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_sale_order__amount_untaxed
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_order_form_inherit_discount
+msgid "Untaxed Amount"
+msgstr "Base imponible"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields,field_description:zehntech_sale_discount_on_total_amount.field_discount_analytics__user_id
+msgid "User"
+msgstr "Usuaria"
+
+#. module: zehntech_sale_discount_on_total_amount
+#: model:ir.model.fields.selection,name:zehntech_sale_discount_on_total_amount.selection__account_move__state__waiting_approval
+#: model:ir.model.fields.selection,name:zehntech_sale_discount_on_total_amount.selection__sale_order__state__waiting_approval
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.sale_order_filter_waiting_approval
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_invoice_filter_inherit_discount_waiting
+#: model_terms:ir.ui.view,arch_db:zehntech_sale_discount_on_total_amount.view_order_filter_inherit_discount_waiting
+msgid "Waiting for Discount Approval"
+msgstr "Esperando la aprobación del descuento"
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/wizard/bulk_discount_approval.py:0
+#, python-format
+msgid "You are not authorized to approve or reject discounts."
+msgstr "No está autorizado a aprobar o rechazar descuentos."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#, python-format
+msgid "You cannot modify discount after the Invoice is posted."
+msgstr "No se puede modificar el descuento una vez publicada la factura."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#, python-format
+msgid "You cannot modify discount once the Sale Order is confirmed."
+msgstr ""
+"No se puede modificar el descuento una vez confirmada la orden de venta."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/sale_order.py:0
+#, python-format
+msgid "✅ Discount approved successfully."
+msgstr "✅ Descuento aprobado exitosamente."
+
+#. module: zehntech_sale_discount_on_total_amount
+#. odoo-python
+#: code:addons/zehntech_sale_discount_on_total_amount/models/account_move.py:0
+#, python-format
+msgid "✅ Invoice discount approved successfully."
+msgstr "✅ Descuento de factura aprobado exitosamente."

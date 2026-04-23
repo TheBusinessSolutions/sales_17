@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+ 
+        <menuitem 
+            id="menu_discount_analytics_root"
+            name="Discount Reports"
+            parent="account.menu_finance_reports"
+            sequence="30" 
+            groups="zehntech_sale_discount_on_total_amount.group_discount_approval_manager"/>
+
+        <menuitem 
+            id="menu_discount_analytics"
+            name="Discount Summary"
+            parent="menu_discount_analytics_root"
+            action="action_discount_analytics"
+            sequence="10"
+            groups="zehntech_sale_discount_on_total_amount.group_discount_approval_manager"/>
+            
+
+    </data>
+</odoo>

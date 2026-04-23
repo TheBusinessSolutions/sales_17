@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_triple_discount_form_view" model="ir.ui.view">
+        <field name="name">sale.order.discount.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']//tree//field[@name='discount']" position="after">
+                <field name="discount1" optional="show" string="Disc(%)"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_form_inherit_discount_footer" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.discount</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_totals']" position="after">
+                <div class="oe_subtotal_footer mt-4">
+                    <div class="row mt-3">
+                        <label for="add_discount" class="col-form-label fw-bold">Add Discount:</label>
+                        <div class="col-8">
+                            <field name="add_discount" class="oe_inline"/>
+                            <field name="add_discount_type" class="oe_inline" widget="radio"/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <label for="total_discount" class="col-form-label fw-bold">Total Discount ($):</label>
+                        <div class="col-8">
+                            <field name="total_discount" class="oe_inline" readonly="1"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

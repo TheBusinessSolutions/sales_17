@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_content" name="Sale Order Portal - Add Discount">
+
+        <xpath expr="//t[@t-call='sale.sale_order_portal_content_totals_table']" position="replace">
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <td class="text-end"><strong>Subtotal:</strong></td>
+                        <td class="text-end">
+                            <span t-esc="sale_order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-end"><strong>Taxes:</strong></td>
+                        <td class="text-end">
+                            <span t-esc="sale_order.amount_tax" t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/>
+                        </td>
+                    </tr>
+                    <tr t-if="sale_order.discount_amount">
+                        <td class="text-end"><strong>Discount:</strong></td>
+                        <td class="text-end text-danger">
+                            - <span t-esc="sale_order.discount_amount" t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-end"><strong>Total:</strong></td>
+                        <td class="text-end">
+                            <span t-esc="sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+</odoo>

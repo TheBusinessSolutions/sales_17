@@ -1,0 +1,22 @@
+<odoo>
+    <record id="res_config_settings_view_form_discount_limit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.sale.discount.limit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+
+            <xpath expr="//setting[@id='show_margins']" position="after">
+                <div class="app_settings_block" title="Sale Discount Approval">
+                    <setting id="sale_discount_approval" string="Sale Discount Approval">
+                        <field name="sale_discount_approval" />
+                        <field name="discount_limit_percentage"
+                            invisible="sale_discount_approval == False" />
+                            <label for="discount_limit_percentage" string="Discount limit (%) requiring approval" class="ms-1"/>
+                    </setting>
+                </div>
+            </xpath>
+
+
+        </field>
+    </record>
+</odoo>

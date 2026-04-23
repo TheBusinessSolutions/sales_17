@@ -1,0 +1,111 @@
+<odoo>
+    <record id="view_order_form_inherit_discount" model="ir.ui.view">
+        <field name="name">sale.order.form.discount</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+        <xpath expr="//header" position="inside">
+            <button name="action_approve_discount"
+                    string="Approve Discount"
+                    type="object"
+                    class="btn-primary"
+                    invisible="state != 'waiting_approval'"
+                    groups="zehntech_sale_discount_on_total_amount.group_discount_approval_manager"/>
+
+            <button name="action_reject_discount"
+                    string="Reject Discount"
+                    type="object"
+                    class="btn-secondary"
+                    confirm="Are you sure you want to reject the discount?"
+                    invisible="state != 'waiting_approval'"
+                    groups="zehntech_sale_discount_on_total_amount.group_discount_approval_manager"/>
+        </xpath>
+
+            <xpath expr="//group[@name='note_group']" position="replace">
+                <group name="note_group" col="6">
+
+                    <group name="discount" colspan="2" groups="product.group_discount_per_so_line">
+                        <field name="discount_type"/>
+                        <field name="discount_rate"/>
+                        <field name="discount_amount" readonly="1"/>
+                    </group>
+
+                    <group class="oe_subtotal_footer oe_right" colspan="2" groups="product.group_discount_per_so_line">
+                        <field name="amount_untaxed" widget="monetary"
+                               options="{'currency_field': 'currency_id'}" string="Untaxed Amount" readonly="1"/>
+                        <field name="amount_tax" widget="monetary"
+                               options="{'currency_field': 'currency_id'}" string="Taxes" readonly="1"/>
+                        <field name="discount_amount" widget="monetary"
+                               options="{'currency_field': 'currency_id'}" string="Discount" readonly="1"/>
+                    </group>
+
+                    <group colspan="4">
+                        <field name="terms_conditions" colspan="2" nolabel="1" placeholder="Terms and conditions..."/>
+                    </group>
+
+
+                    <group class="oe_subtotal_footer oe_right fw-bold fs-2 text-dark" colspan="2">
+                        <field name="amount_total"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"
+                               string="Total" readonly="1"
+                               help="This is the final total after subtracting the discount."/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_order_filter_inherit_discount_waiting" model="ir.ui.view">
+        <field name="name">sale.order.filter.inherit.discount.waiting</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_quotation']" position="after">
+                <filter string="Waiting for Discount Approval"
+                        name="waiting_discount_approval"
+                        domain="[('state','=','waiting_approval')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_filter_waiting_approval" model="ir.ui.view">
+        <field name="name">sale.order.filter.waiting.approval</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='upselling']" position="after">
+                <filter string="Waiting for Discount Approval"
+                        name="waiting_discount_approval"
+                        domain="[('state','=','waiting_approval')]"/>
+            </xpath>
+        </field>
+    </record>
+
+<record id="action_bulk_discount_approval_wizard" model="ir.actions.server">
+    <field name="name">Bulk Discount Approval</field>
+    <field name="model_id" ref="sale.model_sale_order"/>
+    <field name="binding_model_id" ref="sale.model_sale_order"/>
+    <field name="binding_type">action</field>
+    <field name="state">code</field>
+    <field name="code">
+        action = env['sale.order'].browse(env.context.get('active_ids')).action_open_bulk_discount_approval_wizard()
+    </field>
+    <field name="groups_id" eval="[(4, ref('zehntech_sale_discount_on_total_amount.group_discount_approval_manager'))]"/>
+</record>
+
+<record id="action_bulk_discount_update_wizard_sale" model="ir.actions.server">
+    <field name="name">Apply Bulk Discount</field>
+    <field name="model_id" ref="sale.model_sale_order"/>
+    <field name="binding_model_id" ref="sale.model_sale_order"/>
+    <field name="binding_type">action</field>
+    <field name="state">code</field>
+    <field name="code">
+        action = env['sale.order'].browse(env.context.get('active_ids')).action_open_bulk_discount_update_wizard()
+    </field>
+    <field name="groups_id" eval="[(4, ref('zehntech_sale_discount_on_total_amount.group_discount_approval_manager'))]"/>
+</record>
+
+</odoo>

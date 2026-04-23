@@ -1,0 +1,38 @@
+{
+    'name': 'Sale Discount On Total Amount',
+    'version': '17.0.1.0.0',
+    'summary': 'Sale Discount on Total Amount Odoo App manages total order discounts in Odoo with configurable limits and approval workflows. Offers bulk updates and integrates with quotations, sales orders, and invoices. Includes discount analytics.',
+    'description':"""The Sale Discount on Total Amount Odoo module enhances Odoo by enabling the application and management of discounts at the total order level. Discounts can be defined as either a percentage or a fixed amount, with automatic recalculation of order totals.""",
+    'author': 'Zehntech Technologies Inc.',
+    "company": "Zehntech Technologies Inc.",
+    "maintainer": "Zehntech Technologies Inc.",
+    "contributor": "Zehntech Technologies Inc.",
+    'website': 'https://www.zehntech.com/',
+    'support': 'odoo-support@zehntech.com',
+    "live_test_url": "https://zehntechodoo.com/app_name=zehntech_sale_discount_on_total_amount/app_version=17.0",
+    'depends': ['base','sale_management','account','sale'],
+    'data': [
+        'security/sale_discount_groups.xml',
+        'security/bulk_discount_approval_wizard_access.xml',
+        'security/ir.model.access.csv',
+        'views/sale_order_view.xml',
+        'views/res_config_settings_view.xml',
+        'views/account_move_view.xml',
+        'wizard/bulk_discount_approval.xml',
+        'wizard/bulk_discount_update.xml',
+        'views/report_invoice_discount.xml',
+        'views/report_saleorder_discount.xml',
+        'report/discount_report_views.xml',
+        'views/discount_report_menu.xml',
+        'views/portal_sale_discount_view.xml',
+    ],
+    "images": [
+        "static/description/banner.png"
+    ],
+    'license': 'OPL-1',
+    'application': True,
+    'installable': True,
+    'auto_install': False,
+    "price": 00.00,
+    "currency": "USD"
+}

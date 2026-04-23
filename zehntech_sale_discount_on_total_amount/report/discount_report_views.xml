@@ -1,0 +1,27 @@
+<odoo>
+    <data>
+       
+        <record id="view_discount_analytics_list" model="ir.ui.view">
+            <field name="name">discount.analytics.tree</field>
+            <field name="model">discount.analytics</field>
+            <field name="arch" type="xml">
+                <tree string="Discount Summary">
+                    <field name="user_id" readonly="1"/>
+                    <field name="total_discount" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                    <field name="currency_id" readonly="1"/>
+                    <field name="order_count" readonly="1"/>
+                    <field name="invoice_count" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_discount_analytics" model="ir.actions.act_window">
+            <field name="name">Discount Summary</field>
+            <field name="res_model">discount.analytics</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_discount_analytics_list"/>
+            <field name="help">This report summarizes discounts by user across sales and invoices.</field>
+            <field name="context">{}</field>
+        </record>
+    </data>
+</odoo>

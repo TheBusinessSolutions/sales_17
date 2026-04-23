@@ -1,0 +1,7 @@
+
+<odoo>
+
+    <record id="group_discount_approval_manager" model="res.groups">
+        <field name="name">Discount Approval Manager</field>
+    </record>
+</odoo>
