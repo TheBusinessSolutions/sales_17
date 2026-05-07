@@ -1,0 +1,243 @@
+.o_omg_sales_dashboard {
+    --omg-primary: #714b67;
+    --omg-primary-2: #875a7b;
+    --omg-soft: #f7f5f8;
+    --omg-soft-2: #f1edf4;
+    --omg-border: #e2dbe6;
+    --omg-text: #2e2e38;
+    --omg-muted: #68707d;
+    --omg-bg: #f7f6fa;
+    --omg-success: #27946d;
+    --omg-warning: #d2862b;
+    --omg-danger: #b7414d;
+    --omg-info: #5c6cc6;
+    padding: 24px;
+    min-height: calc(100vh - 46px);
+    background: var(--omg-bg);
+    color: var(--omg-text);
+
+    *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+
+    .card {
+        border: 1px solid var(--omg-border);
+        border-radius: 18px;
+        box-shadow: none;
+        background: #fff;
+    }
+
+    .btn {
+        border-radius: 12px;
+        box-shadow: none !important;
+    }
+}
+
+.o_omg_sales_dashboard__header,
+.o_omg_sales_dashboard__toolbar-top,
+.o_omg_sales_dashboard__toolbar-left,
+.o_omg_sales_dashboard__toolbar-actions,
+.o_omg_sales_dashboard__status,
+.o_omg_sales_dashboard__presets,
+.o_omg_sales_dashboard__inline-actions,
+.o_omg_sales_dashboard__group-head,
+.o_omg_sales_dashboard__comparison-meta,
+.o_omg_sales_dashboard__compare-meta,
+.o_omg_sales_dashboard__bar-meta,
+.o_omg_sales_dashboard__target-meta,
+.o_omg_sales_dashboard__favorite-item,
+.o_omg_sales_dashboard__panel-control-row,
+.o_omg_sales_dashboard__popover-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.o_omg_sales_dashboard__header,
+.o_omg_sales_dashboard__toolbar-top,
+.o_omg_sales_dashboard__group-head,
+.o_omg_sales_dashboard__favorite-item,
+.o_omg_sales_dashboard__panel-control-row,
+.o_omg_sales_dashboard__popover-head {
+    justify-content: space-between;
+}
+
+.o_omg_sales_dashboard__eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--omg-primary);
+    margin-bottom: 8px;
+}
+
+.o_omg_sales_dashboard__title {
+    margin: 0 0 8px;
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.o_omg_sales_dashboard__subtitle,
+.o_omg_sales_dashboard__panel-head p,
+.o_omg_sales_dashboard__comparison-label,
+.o_omg_sales_dashboard__status-meta,
+.o_omg_sales_dashboard__kpi-sub,
+.o_omg_sales_dashboard__extra,
+.o_omg_sales_dashboard__collapsed-note,
+.o_omg_sales_dashboard__empty,
+.o_omg_sales_dashboard__alert p {
+    color: var(--omg-muted);
+}
+
+.o_omg_sales_dashboard__subtitle { max-width: 900px; line-height: 1.6; }
+.o_omg_sales_dashboard__status { align-items: flex-end; }
+.o_omg_sales_dashboard__status-chip { padding: 10px 14px; border-radius: 999px; background: #efeaf1; color: var(--omg-primary); font-weight: 700; }
+.o_omg_sales_dashboard__status-chip .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--omg-success); display: inline-block; }
+
+.o_omg_sales_dashboard__toolbar { padding: 18px; margin: 18px 0; position: relative; }
+.o_omg_sales_dashboard__toolbar-left { flex-wrap: wrap; }
+.o_omg_sales_dashboard__toolbar-actions { flex-wrap: wrap; }
+.o_omg_sales_dashboard__view-switch { display: inline-flex; padding: 4px; border: 1px solid var(--omg-border); border-radius: 14px; background: var(--omg-soft); }
+.o_omg_sales_dashboard__view-switch button { border: 0; background: transparent; padding: 10px 16px; font-weight: 700; color: var(--omg-muted); border-radius: 10px; }
+.o_omg_sales_dashboard__view-switch button.active { background: #fff; color: var(--omg-primary); }
+.o_omg_sales_dashboard__groupby-select label,
+.o_omg_sales_dashboard__filter label,
+.o_omg_sales_dashboard__dropdown label,
+.o_omg_sales_dashboard__filter-actions-block label,
+.o_omg_sales_dashboard__presets .label { display: block; font-size: 12px; font-weight: 700; color: var(--omg-muted); margin-bottom: 8px; }
+.o_omg_sales_dashboard__groupby-select select,
+.o_omg_sales_dashboard__filter input,
+.o_omg_sales_dashboard__dropdown-toggle,
+.o_omg_sales_dashboard__dropdown-search,
+.o_omg_sales_dashboard__inline-actions select { min-height: 44px; border-radius: 14px; border: 1px solid var(--omg-border); background: #fff; width: 100%; }
+.o_omg_sales_dashboard__groupby-select select,
+.o_omg_sales_dashboard__filter input,
+.o_omg_sales_dashboard__dropdown-search,
+.o_omg_sales_dashboard__inline-actions select { padding: 0 14px; }
+.o_omg_sales_dashboard__dropdown { position: relative; }
+.o_omg_sales_dashboard__dropdown-toggle { display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 14px; text-align: left; font-weight: 600; }
+.o_omg_sales_dashboard__dropdown-toggle .count { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; border-radius: 999px; background: var(--omg-soft); color: var(--omg-primary); font-size: 12px; }
+.o_omg_sales_dashboard__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.o_omg_sales_dashboard__chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; background: var(--omg-soft); border: 1px solid var(--omg-border); color: var(--omg-primary); font-size: 12px; font-weight: 700; }
+.o_omg_sales_dashboard__chip button, .o_omg_sales_dashboard__link-btn, .o_omg_sales_dashboard__sort-btn { border: 0; background: transparent; color: inherit; padding: 0; }
+.o_omg_sales_dashboard__dropdown-panel, .o_omg_sales_dashboard__popover { position: absolute; top: calc(100% + 8px); right: 0; min-width: 320px; z-index: 20; padding: 12px; border: 1px solid var(--omg-border); border-radius: 18px; background: #fff; }
+.o_omg_sales_dashboard__popover { top: 72px; }
+.o_omg_sales_dashboard__popover--wide { min-width: 480px; }
+.o_omg_sales_dashboard__toolbar-popovers { position: relative; }
+.o_omg_sales_dashboard__dropdown-actions { display: flex; justify-content: space-between; margin: 10px 0; }
+.o_omg_sales_dashboard__dropdown-actions button { border: 0; background: var(--omg-soft); color: var(--omg-primary); border-radius: 10px; padding: 8px 10px; font-weight: 700; }
+.o_omg_sales_dashboard__dropdown-list { max-height: 280px; overflow: auto; border: 1px solid var(--omg-border); border-radius: 14px; }
+.o_omg_sales_dashboard__check-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin: 0; border-bottom: 1px solid var(--omg-border); cursor: pointer; }
+.o_omg_sales_dashboard__check-item.no-border { border-bottom: 0; padding-left: 0; }
+.o_omg_sales_dashboard__check-grid.compact { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; }
+.o_omg_sales_dashboard__favorite-list, .o_omg_sales_dashboard__panel-control-list { display: grid; gap: 10px; margin-top: 10px; }
+.o_omg_sales_dashboard__filters-wrap { margin-top: 16px; }
+.o_omg_sales_dashboard__presets { flex-wrap: wrap; margin-bottom: 12px; }
+.o_omg_sales_dashboard__filters-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.o_omg_sales_dashboard__filter, .o_omg_sales_dashboard__dropdown, .o_omg_sales_dashboard__filter-actions-block { grid-column: span 2; }
+.o_omg_sales_dashboard__filter--date { grid-column: span 2; }
+
+.o_omg_sales_dashboard__kpis,
+.o_omg_sales_dashboard__comparison-row,
+.o_omg_sales_dashboard__grid,
+.o_omg_sales_dashboard__skeleton-grid { display: grid; gap: 14px; }
+.o_omg_sales_dashboard__kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.o_omg_sales_dashboard__comparison-row { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 14px; }
+.o_omg_sales_dashboard__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 16px; }
+.o_omg_sales_dashboard__skeleton-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 16px; }
+.o_omg_sales_dashboard__panel--wide { grid-column: span 2; }
+.o_omg_sales_dashboard__kpi,
+.o_omg_sales_dashboard__comparison-card,
+.o_omg_sales_dashboard__panel,
+.o_omg_sales_dashboard__skeleton-card,
+.o_omg_sales_dashboard__list-toolbar,
+.o_omg_sales_dashboard__error-block { padding: 18px; }
+.o_omg_sales_dashboard__kpi { text-align: left; border: 1px solid var(--omg-border); background: #fff; }
+.o_omg_sales_dashboard__kpi-label { font-size: 13px; font-weight: 700; color: var(--omg-muted); }
+.o_omg_sales_dashboard__kpi-value { font-size: 28px; font-weight: 800; margin: 10px 0 6px; }
+.o_omg_sales_dashboard__comparison-main { font-size: 22px; font-weight: 800; margin: 8px 0; }
+.o_omg_sales_dashboard__delta { font-weight: 700; }
+.o_omg_sales_dashboard__delta.is-up { color: var(--omg-success); }
+.o_omg_sales_dashboard__delta.is-down { color: var(--omg-danger); }
+.o_omg_sales_dashboard__delta.is-neutral { color: var(--omg-muted); }
+.o_omg_sales_dashboard__panel-head { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.o_omg_sales_dashboard__panel-head h3 { margin: 0 0 6px; font-size: 18px; }
+.o_omg_sales_dashboard__collapsed-note { padding: 16px 0 4px; }
+
+.o_omg_sales_dashboard__line-chart svg { width: 100%; height: 240px; display: block; }
+.o_omg_sales_dashboard__line-chart .area { fill: rgba(113, 75, 103, 0.12); }
+.o_omg_sales_dashboard__line-chart .line { fill: none; stroke: var(--omg-primary); stroke-width: 4; }
+.o_omg_sales_dashboard__line-chart.light .area { fill: rgba(113, 75, 103, 0.08); }
+.o_omg_sales_dashboard__line-xlabels { display: grid; grid-template-columns: repeat(auto-fit, minmax(54px, 1fr)); gap: 4px; }
+.o_omg_sales_dashboard__line-xlabels button, .o_omg_sales_dashboard__line-xlabels span { font-size: 11px; color: var(--omg-muted); border: 0; background: transparent; padding: 4px; }
+.o_omg_sales_dashboard__line-xlabels.short { grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); }
+
+.o_omg_sales_dashboard__vbar-chart { display: flex; align-items: end; gap: 10px; min-height: 220px; overflow-x: auto; }
+.o_omg_sales_dashboard__vbar-item { min-width: 60px; border: 0; background: transparent; padding: 0; text-align: center; }
+.o_omg_sales_dashboard__vbar-track { height: 160px; display: flex; align-items: end; background: var(--omg-soft); border-radius: 12px; overflow: hidden; }
+.o_omg_sales_dashboard__vbar-fill { width: 100%; background: var(--omg-primary); border-radius: 12px 12px 0 0; }
+.o_omg_sales_dashboard__vbar-fill.soft { background: var(--omg-primary-2); }
+.o_omg_sales_dashboard__vbar-label, .o_omg_sales_dashboard__vbar-value { font-size: 11px; margin-top: 6px; }
+
+.o_omg_sales_dashboard__compare-list, .o_omg_sales_dashboard__bars, .o_omg_sales_dashboard__target-list { display: grid; gap: 12px; }
+.o_omg_sales_dashboard__compare-item, .o_omg_sales_dashboard__bar-item { border: 0; background: transparent; padding: 0; text-align: left; }
+.o_omg_sales_dashboard__bar-track { height: 10px; background: var(--omg-soft); border-radius: 999px; overflow: hidden; margin-top: 8px; }
+.o_omg_sales_dashboard__bar-fill { height: 100%; background: var(--omg-primary); }
+.o_omg_sales_dashboard__bar-fill.success { background: var(--omg-success); }
+.o_omg_sales_dashboard__bar-fill.tertiary { background: var(--omg-primary-2); }
+.o_omg_sales_dashboard__compare-meta strong, .o_omg_sales_dashboard__bar-meta strong { margin-left: auto; }
+.o_omg_sales_dashboard__donut-block { display: grid; grid-template-columns: 160px 1fr; gap: 18px; align-items: center; }
+.o_omg_sales_dashboard__donut { width: 160px; height: 160px; border-radius: 50%; }
+.o_omg_sales_dashboard__legend { display: grid; gap: 8px; }
+.o_omg_sales_dashboard__legend-item { border: 1px solid var(--omg-border); background: #fff; border-radius: 12px; padding: 10px 12px; display: flex; justify-content: space-between; }
+.o_omg_sales_dashboard__heatmap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.o_omg_sales_dashboard__heat-cell { border-radius: 14px; padding: 16px; color: #fff; min-height: 110px; display: flex; flex-direction: column; justify-content: space-between; }
+.o_omg_sales_dashboard__heat-cell .day { font-size: 12px; opacity: .9; }
+.o_omg_sales_dashboard__target-overall { font-weight: 700; margin-bottom: 8px; }
+
+.o_omg_sales_dashboard__alerts { display: grid; gap: 12px; }
+.o_omg_sales_dashboard__alert { border-radius: 14px; padding: 14px 16px; border: 1px solid var(--omg-border); background: #fff; }
+.o_omg_sales_dashboard__alert.info { border-color: rgba(92, 108, 198, .25); background: rgba(92, 108, 198, .08); }
+.o_omg_sales_dashboard__alert.warning { border-color: rgba(210, 134, 43, .25); background: rgba(210, 134, 43, .10); }
+.o_omg_sales_dashboard__alert.danger { border-color: rgba(183, 65, 77, .25); background: rgba(183, 65, 77, .10); }
+
+.o_omg_sales_dashboard__table-wrap { margin-top: 16px; overflow: auto; }
+.o_omg_sales_dashboard__table-wrap.compact { margin-top: 0; }
+.o_omg_sales_dashboard__table { width: 100%; border-collapse: separate; border-spacing: 0; }
+.o_omg_sales_dashboard__table th, .o_omg_sales_dashboard__table td { padding: 12px 14px; border-bottom: 1px solid var(--omg-border); white-space: nowrap; }
+.o_omg_sales_dashboard__table thead th { background: #faf9fb; position: sticky; top: 0; z-index: 1; }
+.o_omg_sales_dashboard__totals-row td { font-weight: 700; background: var(--omg-soft); }
+.o_omg_sales_dashboard__sort-btn { font-weight: 700; color: var(--omg-text); }
+.o_omg_sales_dashboard__link-btn { color: var(--omg-primary); font-weight: 700; }
+.o_omg_sales_dashboard__group-block + .o_omg_sales_dashboard__group-block { margin-top: 18px; }
+.o_omg_sales_dashboard__group-head .meta { display: flex; gap: 16px; color: var(--omg-muted); }
+.o_omg_sales_dashboard__skeleton-card { min-height: 140px; background: linear-gradient(90deg, #f7f5f8 0%, #efebf1 50%, #f7f5f8 100%); }
+.o_omg_sales_dashboard__error-block h3 { margin-top: 0; }
+.o_omg_sales_dashboard__list-toolbar { margin-top: 16px; }
+.o_omg_sales_dashboard__empty.small { font-size: 12px; }
+
+@media (max-width: 1400px) {
+    .o_omg_sales_dashboard__kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .o_omg_sales_dashboard__comparison-row,
+    .o_omg_sales_dashboard__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .o_omg_sales_dashboard__panel--wide { grid-column: span 2; }
+    .o_omg_sales_dashboard__filters-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+    .o_omg_sales_dashboard { padding: 16px; }
+    .o_omg_sales_dashboard__comparison-row,
+    .o_omg_sales_dashboard__grid,
+    .o_omg_sales_dashboard__kpis,
+    .o_omg_sales_dashboard__skeleton-grid,
+    .o_omg_sales_dashboard__filters-grid,
+    .o_omg_sales_dashboard__heatmap { grid-template-columns: 1fr; }
+    .o_omg_sales_dashboard__panel--wide,
+    .o_omg_sales_dashboard__filter,
+    .o_omg_sales_dashboard__dropdown,
+    .o_omg_sales_dashboard__filter-actions-block { grid-column: span 1; }
+    .o_omg_sales_dashboard__donut-block { grid-template-columns: 1fr; }
+    .o_omg_sales_dashboard__popover, .o_omg_sales_dashboard__popover--wide { position: static; min-width: 100%; margin-top: 10px; }
+}

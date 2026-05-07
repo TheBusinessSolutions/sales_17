@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_omg_sales_dashboard_target_user,access.omg.sales.dashboard.target.user,model_omg_sales_dashboard_target,sales_team.group_sale_salesman,1,0,0,0
+access_omg_sales_dashboard_target_manager,access.omg.sales.dashboard.target.manager,model_omg_sales_dashboard_target,sales_team.group_sale_manager,1,1,1,1

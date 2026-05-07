@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Sales Real-Time Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        body {font-family: 'Poppins', Arial, Helvetica, sans-serif; color:#161616; background:#ffffff;}
+        .omg-wrap p, .omg-wrap li, .omg-wrap span {font-size:16px; line-height:1.85; color:#667085;}
+        .omg-wrap h1, .omg-wrap h2, .omg-wrap h3, .omg-wrap h4, .omg-wrap h5 {color:#111827;}
+        .omg-card {border-radius:18px; border:1px solid #ebe7f0; background:#ffffff; box-shadow:0 10px 25px rgba(113,75,103,0.08);}
+        .omg-soft {border-radius:18px; border:1px solid #ece7f2; background:#f7f4fa; box-shadow:0 5px 20px rgba(113,75,103,0.06);}
+        .omg-chip {display:inline-block; background:#f2edf8; color:#714b67; border:1px solid #e6dcef; border-radius:999px; padding:8px 16px; margin:4px; font-size:14px; font-weight:600;}
+        .omg-badge {display:inline-block; background:#ffffff; color:#714b67; border:1px solid #dfd7ea; border-radius:999px; padding:10px 18px; margin:4px; font-weight:700;}
+        .omg-label {letter-spacing:4px; color:#714b67; font-size:13px; text-transform:uppercase; font-weight:700;}
+        .omg-placeholder {
+            min-height: 300px;
+            border: 2px dashed #ccb7de;
+            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(113,75,103,0.05), rgba(135,90,123,0.10));
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            padding:30px;
+            color:#714b67;
+            font-weight:700;
+            font-size:22px;
+        }
+        .omg-carousel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 22px;
+            background: #f7f4fa;
+            border:1px solid #ece7f2;
+            min-height: 360px;
+        }
+        .omg-carousel-track {
+            display:flex;
+            width:300%;
+            animation: omgSlide 18s infinite;
+        }
+        .omg-slide {
+            width:33.3333%;
+            flex-shrink:0;
+            padding:28px;
+        }
+        .omg-shot {
+            min-height:300px;
+            border-radius:18px;
+            border:2px dashed #cbb4dc;
+            background:linear-gradient(135deg, rgba(113,75,103,0.06), rgba(53,162,159,0.10));
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            padding:22px;
+        }
+        .omg-shot small {font-size:13px; color:#7a8699; font-weight:600; letter-spacing:2px; text-transform:uppercase;}
+        .omg-shot strong {font-size:24px; color:#714b67; margin-top:12px;}
+        .omg-metric {
+            padding:24px;
+            border-radius:18px;
+            border:1px solid #ece7f2;
+            background:#fff;
+            box-shadow:0 8px 18px rgba(113,75,103,0.06);
+            height:100%;
+        }
+        .omg-metric .icon {
+            width:46px; height:46px; border-radius:12px; background:#714b67; color:#fff;
+            display:flex; align-items:center; justify-content:center; font-size:22px; margin-bottom:16px;
+        }
+        .omg-kpi-sample {
+            border-radius:16px;
+            background:linear-gradient(135deg, #714b67, #9a6c90);
+            color:#fff;
+            padding:18px 20px;
+            margin-top:16px;
+        }
+        .omg-kpi-sample .v {font-size:32px; font-weight:700; line-height:1.2;}
+        .omg-footer {color:#7b8190; font-size:14px;}
+        @keyframes omgSlide {
+            0%, 24% {transform: translateX(0);}
+            33%, 57% {transform: translateX(-33.3333%);}
+            66%, 90% {transform: translateX(-66.6666%);}
+            100% {transform: translateX(0);}
+        }
+
+        .omg-banner {
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #ece7f2;
+            box-shadow: 0 10px 28px rgba(113,75,103,0.10);
+            background:#fff;
+        }
+        .omg-banner img {
+            width:100%;
+            display:block;
+        }
+        .omg-screenshot-grid {
+            display:grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+        }
+        .omg-screenshot-card {
+            border-radius: 22px;
+            overflow:hidden;
+            border:1px solid #ece7f2;
+            background:#fff;
+            box-shadow: 0 8px 22px rgba(113,75,103,0.08);
+        }
+        .omg-screenshot-card img {
+            display:block;
+            width:100%;
+            height:auto;
+        }
+        .omg-screenshot-card .cap {
+            padding:16px 18px;
+            color:#714b67;
+            font-weight:700;
+            font-size:15px;
+            border-top:1px solid #f0e9f5;
+            background:#fff;
+        }
+        .omg-screenshot-card--full {
+            grid-column: 1 / -1;
+        }
+        @media (max-width: 991px) {
+            .omg-screenshot-grid {grid-template-columns: 1fr;}
+            .omg-screenshot-card--full {grid-column: auto;}
+        }
+
+        @media (max-width: 991px) {
+            .omg-title {font-size:34px !important;}
+        }
+    </style>
+</head>
+<body>
+<div class="container my-5 omg-wrap">
+
+    <div class="my-3 d-flex align-items-center justify-content-center flex-wrap">
+        <div class="text-center" style="background-color:#000505; color:#fff; font-size:0.8rem; font-weight:500; padding:4px 14px; margin:4px; border-radius:5px; min-width:120px;">Community</div>
+        <div class="text-center" style="background-color:#000000; color:#fff; font-size:0.8rem; font-weight:500; padding:4px 14px; margin:4px; border-radius:5px; min-width:120px;">Enterprise</div>
+        <div class="text-center" style="background-color:#000000; color:#fff; font-size:0.8rem; font-weight:500; padding:4px 14px; margin:4px; border-radius:5px; min-width:120px;">Odoo.sh</div>
+    </div>
+
+    <div class="position-relative mb-5 omg-soft" style="padding:34px 24px 0; overflow:hidden;">
+        <div class="row align-items-center">
+            <div class="col-lg-7 py-4">
+                <p class="omg-label mb-3">Odoo Man · Sales Intelligence</p>
+                <h1 class="omg-title" style="font-size:48px; font-weight:800; line-height:1.15;">Sales Real-Time Dashboard</h1>
+                <p style="font-size:18px; max-width:760px;">
+                    Track live sales activity with actionable KPI cards, responsive charts, and flexible business filters,
+                    all inside a polished Odoo-native dashboard experience.
+                </p>
+                <div class="my-3">
+                    <span class="omg-chip">Real-time KPI visibility</span>
+                    <span class="omg-chip">Interactive sales filters</span>
+                    <span class="omg-chip">Responsive Odoo UI</span>
+                    <span class="omg-chip">Fast aggregated backend</span>
+                </div>
+                <div class="my-3">
+                    <span class="omg-badge">omg_sales_realtime_dashboard</span>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center">
+                <img src="odoo_man_character.png" alt="Odoo Man" class="img-fluid" style="max-height:360px; width:auto;">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="omg-banner mb-5">
+        <img src="banner.gif" alt="Sales Real-Time Dashboard Banner"/>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-lg-4 mb-4">
+            <div class="omg-metric">
+                <div class="icon">📈</div>
+                <h3 style="font-size:24px; font-weight:700;">Live Sales Metrics</h3>
+                <p>Display confirmed revenue, quotation pipeline, average order value, and order counts in one clear dashboard.</p>
+                <div class="omg-kpi-sample">
+                    <div style="font-size:13px; text-transform:uppercase; letter-spacing:2px;">Sample KPI</div>
+                    <div class="v">$148,250</div>
+                    <div style="opacity:.85;">Confirmed revenue in selected period</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="omg-metric">
+                <div class="icon">🎛</div>
+                <h3 style="font-size:24px; font-weight:700;">Interactive Filtering</h3>
+                <p>Refine dashboard data by date range, sales team, product, and customer without leaving the page.</p>
+                <ul class="mb-0" style="padding-left:20px;">
+                    <li>Date from / date to filters</li>
+                    <li>Multi-select sales teams</li>
+                    <li>Multi-select products</li>
+                    <li>Multi-select customers</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-4">
+            <div class="omg-metric">
+                <div class="icon">⚡</div>
+                <h3 style="font-size:24px; font-weight:700;">Optimized Refresh</h3>
+                <p>Uses lightweight JSON calls and aggregated backend calculations to refresh insights without page reloads.</p>
+                <ul class="mb-0" style="padding-left:20px;">
+                    <li>Auto refresh every 30 seconds</li>
+                    <li>Manual refresh on demand</li>
+                    <li>Grouped SQL calculations</li>
+                    <li>Modular service architecture</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="omg-card mb-5" style="padding:42px 34px;">
+        <div class="text-center mb-4">
+            <p class="omg-label mb-2">What you get</p>
+            <h2 style="font-size:38px; font-weight:800;">Main dashboard capabilities</h2>
+            <p class="mb-0">Designed for sales leaders, account managers, and operational teams who need instant commercial visibility.</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="omg-soft h-100" style="padding:28px;">
+                    <h3 style="font-size:26px; font-weight:700;">Included analytics blocks</h3>
+                    <ul style="padding-left:20px; margin:0;">
+                        <li>Confirmed revenue KPI</li>
+                        <li>Quotation pipeline KPI</li>
+                        <li>Confirmed orders KPI</li>
+                        <li>Average order value KPI</li>
+                        <li>Daily sales trend visualization</li>
+                        <li>Sales team performance comparison</li>
+                        <li>Top-selling products</li>
+                        <li>Top customers by sales value</li>
+                        <li>Order state distribution</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-4">
+                <div class="omg-soft h-100" style="padding:28px;">
+                    <h3 style="font-size:26px; font-weight:700;">Business value</h3>
+                    <ul style="padding-left:20px; margin:0;">
+                        <li>Faster decision-making from live commercial data</li>
+                        <li>Clear understanding of sales pipeline and confirmed revenue</li>
+                        <li>Better visibility into product and customer concentration</li>
+                        <li>Less manual export dependency for daily monitoring</li>
+                        <li>Cleaner collaboration between management and sales teams</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="omg-card mb-5" style="padding:42px 34px;">
+        <div class="row align-items-center mb-4">
+            <div class="col-lg-8">
+                <p class="omg-label mb-2">Real screenshots</p>
+                <h2 style="font-size:38px; font-weight:800;">Actual module screens</h2>
+                <p class="mb-0">This package now includes the real dashboard screenshots and the final Odoo Man marketing banner.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <span class="omg-badge">5 Screens Included</span>
+            </div>
+        </div>
+        <div class="omg-screenshot-grid">
+            <div class="omg-screenshot-card omg-screenshot-card--full">
+                <img src="screenshots/1.png" alt="Sales dashboard screenshot 1"/>
+                <div class="cap">Main dashboard overview</div>
+            </div>
+            <div class="omg-screenshot-card">
+                <img src="screenshots/2.png" alt="Sales dashboard screenshot 2"/>
+                <div class="cap">Advanced filters and analytics panels</div>
+            </div>
+            <div class="omg-screenshot-card">
+                <img src="screenshots/3.png" alt="Sales dashboard screenshot 3"/>
+                <div class="cap">Charts, KPIs, and comparison widgets</div>
+            </div>
+            <div class="omg-screenshot-card">
+                <img src="screenshots/4.png" alt="Sales dashboard screenshot 4"/>
+                <div class="cap">Orders list mode and drill-down flow</div>
+            </div>
+            <div class="omg-screenshot-card">
+                <img src="screenshots/5.png" alt="Sales dashboard screenshot 5"/>
+                <div class="cap">Targets, profitability, and business insights</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="omg-card mb-5" style="padding:42px 34px;">
+        <div class="text-center mb-4">
+            <p class="omg-label mb-2">How it works</p>
+            <h2 style="font-size:38px; font-weight:800;">Simple setup, instant value</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="omg-soft h-100" style="padding:26px;">
+                    <div style="width:48px; height:48px; border-radius:50%; background:#714b67; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700;">1</div>
+                    <h4 style="font-size:22px; font-weight:700; margin-top:18px;">Install</h4>
+                    <p class="mb-0">Install the module and open the dashboard from <strong>Sales &gt; Real-Time Dashboard</strong>.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="omg-soft h-100" style="padding:26px;">
+                    <div style="width:48px; height:48px; border-radius:50%; background:#714b67; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700;">2</div>
+                    <h4 style="font-size:22px; font-weight:700; margin-top:18px;">Filter</h4>
+                    <p class="mb-0">Choose date ranges, sales teams, products, and customers to focus on the exact sales slice you need.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="omg-soft h-100" style="padding:26px;">
+                    <div style="width:48px; height:48px; border-radius:50%; background:#714b67; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700;">3</div>
+                    <h4 style="font-size:22px; font-weight:700; margin-top:18px;">Monitor</h4>
+                    <p class="mb-0">Watch the dashboard auto-refresh and follow changes in revenue, quotations, products, teams, and customers.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="omg-soft h-100" style="padding:26px;">
+                    <div style="width:48px; height:48px; border-radius:50%; background:#714b67; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700;">4</div>
+                    <h4 style="font-size:22px; font-weight:700; margin-top:18px;">Act</h4>
+                    <p class="mb-0">Use the generated insight to drill into orders, adjust strategy, and improve daily sales execution.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-lg-7 mb-4">
+            <div class="omg-card h-100" style="padding:36px;">
+                <p class="omg-label mb-2">Documentation</p>
+                <h2 style="font-size:34px; font-weight:800;">Clean structure for future maintenance</h2>
+                <p>The package includes a modular technical layout with separated controllers, services, OWL frontend files, documentation, and Odoo Man style description assets.</p>
+                <ul class="mb-0" style="padding-left:20px;">
+                    <li>README.md</li>
+                    <li>README.rst</li>
+                    <li>DEVELOPER_GUIDE.md</li>
+                    <li>Modular JS / XML / SCSS frontend assets</li>
+                    <li>Service-oriented backend structure</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-5 mb-4">
+            <div class="omg-card h-100" style="padding:36px;">
+                <p class="omg-label mb-2">Compatibility</p>
+                <h2 style="font-size:34px; font-weight:800;">Built for Odoo 17</h2>
+                <p class="mb-0">Prepared to fit Odoo 17 backend patterns and Sales workflows while keeping the user experience clean, modern, and responsive.</p>
+                <div class="mt-4">
+                    <span class="omg-chip">Odoo 17</span>
+                    <span class="omg-chip">Sales</span>
+                    <span class="omg-chip">OWL Client Action</span>
+                    <span class="omg-chip">Responsive Layout</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="omg-card mb-4" style="padding:36px;">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <p class="omg-label mb-2">Odoo Man</p>
+                <h2 style="font-size:34px; font-weight:800;">A stronger commercial dashboard experience inside Odoo</h2>
+                <p class="mb-0">This module follows the Odoo Man visual direction and keeps a clean marketing-oriented description structure, ready for publication and future enhancement.</p>
+            </div>
+            <div class="col-lg-4 text-center">
+                <img src="odoo_man_character_2.png" alt="Odoo Man Character" class="img-fluid" style="max-height:280px; width:auto;">
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center pb-4 omg-footer">© 2026 Odoo Man</div>
+</div>
+</body>
+</html>

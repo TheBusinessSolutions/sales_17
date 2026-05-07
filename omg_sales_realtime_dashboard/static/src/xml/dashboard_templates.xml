@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="omg_sales_realtime_dashboard.Dashboard">
+        <div class="o_action_manager">
+            <div class="o_omg_sales_dashboard">
+                <div class="o_omg_sales_dashboard__header">
+                    <div>
+                        <div class="o_omg_sales_dashboard__eyebrow">Odoo Man · Odoo 17</div>
+                        <h1 class="o_omg_sales_dashboard__title">Sales Real-Time Dashboard</h1>
+                        <p class="o_omg_sales_dashboard__subtitle">Executive sales analytics with smarter filters, comparison insights, targets, profitability, drill-downs, grouped list mode, and a fully static interface.</p>
+                    </div>
+                    <div class="o_omg_sales_dashboard__status">
+                        <div class="o_omg_sales_dashboard__status-chip">
+                            <span class="dot"></span>
+                            <t t-if="state.draftFilters.refresh_interval_ms">Auto refresh every <t t-esc="formatNumber(state.draftFilters.refresh_interval_ms / 1000)"/> sec</t>
+                            <t t-else="">Auto refresh off</t>
+                        </div>
+                        <div class="o_omg_sales_dashboard__status-meta" t-if="dashboard.meta">Last update: <strong><t t-esc="dashboard.meta.generated_at"/></strong></div>
+                    </div>
+                </div>
+
+                <div class="card o_omg_sales_dashboard__toolbar">
+                    <div class="o_omg_sales_dashboard__toolbar-top">
+                        <div class="o_omg_sales_dashboard__toolbar-left">
+                            <div class="o_omg_sales_dashboard__view-switch">
+                                <button type="button" t-att-class="state.viewMode === 'dashboard' ? 'active' : ''" t-on-click="onOpenDashboardMode">Dashboard</button>
+                                <button type="button" t-att-class="state.viewMode === 'list' ? 'active' : ''" t-on-click="onOpenListMode">Orders List</button>
+                            </div>
+                            <div class="o_omg_sales_dashboard__groupby-select">
+                                <label>Group By</label>
+                                <select t-att-value="state.groupBy" t-on-change="setGroupBy">
+                                    <option value="none">No Grouping</option>
+                                    <option value="team">Sales Team</option>
+                                    <option value="salesperson">Salesperson</option>
+                                    <option value="customer">Customer</option>
+                                    <option value="state">State</option>
+                                    <option value="month">Month</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="o_omg_sales_dashboard__toolbar-actions">
+                            <button type="button" class="btn btn-light" t-on-click="onToggleFilters">Filters</button>
+                            <button type="button" class="btn btn-light" t-on-click="() => toggleDropdown('favorites')">Favorites</button>
+                            <button type="button" class="btn btn-light" t-on-click="() => toggleDropdown('columns')">Columns</button>
+                            <button type="button" class="btn btn-light" t-on-click="() => toggleDropdown('panels')">Panels</button>
+                            <button type="button" class="btn btn-primary" t-on-click="onRefreshNow">Refresh</button>
+                        </div>
+                    </div>
+
+                    <div class="o_omg_sales_dashboard__toolbar-popovers">
+                        <div class="o_omg_sales_dashboard__popover" t-if="state.openDropdown === 'favorites'">
+                            <div class="o_omg_sales_dashboard__popover-head">
+                                <strong>Saved Favorites</strong>
+                                <button type="button" class="btn btn-primary btn-sm" t-on-click="onSaveFavorite">Save Current</button>
+                            </div>
+                            <t t-if="state.favorites.length">
+                                <div class="o_omg_sales_dashboard__favorite-list">
+                                    <t t-foreach="state.favorites" t-as="favorite" t-key="favorite.name + '_' + favorite_index">
+                                        <div class="o_omg_sales_dashboard__favorite-item">
+                                            <span><t t-esc="favorite.name"/></span>
+                                            <div class="actions">
+                                                <button type="button" class="btn btn-light btn-sm" t-on-click="() => applyFavorite(favorite_index)">Apply</button>
+                                                <button type="button" class="btn btn-light btn-sm" t-on-click="() => deleteFavorite(favorite_index)">Delete</button>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </t>
+                            <t t-else=""><div class="o_omg_sales_dashboard__empty small">No favorites yet.</div></t>
+                        </div>
+
+                        <div class="o_omg_sales_dashboard__popover" t-if="state.openDropdown === 'columns'">
+                            <div class="o_omg_sales_dashboard__popover-head"><strong>Visible Columns</strong></div>
+                            <div class="o_omg_sales_dashboard__check-grid compact">
+                                <t t-foreach="allColumnDefs" t-as="column" t-key="column.key">
+                                    <label class="o_omg_sales_dashboard__check-item no-border">
+                                        <input type="checkbox" t-att-checked="state.visibleColumns[column.key] ? true : undefined" t-on-change="() => toggleColumn(column.key)"/>
+                                        <span><t t-esc="column.label"/></span>
+                                    </label>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div class="o_omg_sales_dashboard__popover o_omg_sales_dashboard__popover--wide" t-if="state.openDropdown === 'panels'">
+                            <div class="o_omg_sales_dashboard__popover-head">
+                                <strong>Panel Controls</strong>
+                                <div class="actions">
+                                    <button type="button" class="btn btn-light btn-sm" t-on-click="onCollapseAllPanels">Collapse All</button>
+                                    <button type="button" class="btn btn-light btn-sm" t-on-click="onExpandAllPanels">Expand All</button>
+                                </div>
+                            </div>
+                            <div class="o_omg_sales_dashboard__panel-control-list">
+                                <t t-foreach="state.panelOrder" t-as="panelKey" t-key="panelKey">
+                                    <div class="o_omg_sales_dashboard__panel-control-row">
+                                        <label class="o_omg_sales_dashboard__check-item no-border">
+                                            <input type="checkbox" t-att-checked="state.visiblePanels[panelKey] ? true : undefined" t-on-change="() => togglePanel(panelKey)"/>
+                                            <span><t t-esc="panelLabel(panelKey)"/></span>
+                                        </label>
+                                        <div class="actions">
+                                            <button type="button" class="btn btn-light btn-sm" t-on-click="() => movePanel(panelKey, 'up')">↑</button>
+                                            <button type="button" class="btn btn-light btn-sm" t-on-click="() => movePanel(panelKey, 'down')">↓</button>
+                                            <button type="button" class="btn btn-light btn-sm" t-on-click="() => togglePanelCollapsed(panelKey)"><t t-esc="state.collapsedPanels[panelKey] ? 'Expand' : 'Collapse'"/></button>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div t-if="state.showFilters" class="o_omg_sales_dashboard__filters-wrap">
+                        <div class="o_omg_sales_dashboard__presets">
+                            <span class="label">Quick Range</span>
+                            <t t-if="state.options">
+                                <t t-foreach="state.options.date_presets" t-as="preset" t-key="preset.key">
+                                    <button type="button" class="btn btn-light btn-sm" t-on-click="() => applyPreset(preset.key)"><t t-esc="preset.label"/></button>
+                                </t>
+                            </t>
+                        </div>
+
+                        <div class="o_omg_sales_dashboard__filters-grid">
+                            <div class="o_omg_sales_dashboard__filter o_omg_sales_dashboard__filter--date">
+                                <label>From Date</label>
+                                <input type="date" t-att-value="state.draftFilters.date_from" t-on-change="(ev) => updateDate('date_from', ev)"/>
+                            </div>
+                            <div class="o_omg_sales_dashboard__filter o_omg_sales_dashboard__filter--date">
+                                <label>To Date</label>
+                                <input type="date" t-att-value="state.draftFilters.date_to" t-on-change="(ev) => updateDate('date_to', ev)"/>
+                            </div>
+
+                            <t t-set="filterKeys" t-value="['team_ids', 'user_ids', 'product_ids', 'partner_ids']"/>
+                            <t t-foreach="filterKeys" t-as="field" t-key="field">
+                                <div class="o_omg_sales_dashboard__dropdown">
+                                    <label><t t-esc="field === 'team_ids' ? 'Sales Teams' : field === 'user_ids' ? 'Salespeople' : field === 'product_ids' ? 'Products' : 'Customers'"/></label>
+                                    <button type="button" class="o_omg_sales_dashboard__dropdown-toggle" t-on-click="() => toggleDropdown(field)">
+                                        <span><t t-esc="dropdownLabel(field, field === 'team_ids' ? 'All Teams' : field === 'user_ids' ? 'All Salespeople' : field === 'product_ids' ? 'All Products' : 'All Customers')"/></span>
+                                        <span class="count"><t t-esc="(state.draftFilters[field] || []).length"/></span>
+                                    </button>
+                                    <div class="o_omg_sales_dashboard__chips" t-if="selectedItems(field).length">
+                                        <t t-foreach="selectedItems(field)" t-as="item" t-key="item.id">
+                                            <span class="o_omg_sales_dashboard__chip"><t t-esc="item.name"/><button type="button" t-on-click="() => removeChip(field, item.id)">×</button></span>
+                                        </t>
+                                    </div>
+                                    <div class="o_omg_sales_dashboard__dropdown-panel" t-if="state.openDropdown === field">
+                                        <input class="o_omg_sales_dashboard__dropdown-search" type="text" placeholder="Search..." t-att-value="state.searches[field]" t-on-input="(ev) => updateSearch(field, ev)"/>
+                                        <div class="o_omg_sales_dashboard__dropdown-actions">
+                                            <button type="button" t-on-click="() => selectAllVisible(field)">Select visible</button>
+                                            <button type="button" t-on-click="() => clearSelection(field)">Clear</button>
+                                        </div>
+                                        <div class="o_omg_sales_dashboard__dropdown-list">
+                                            <t t-foreach="filteredOptions(field)" t-as="option" t-key="option.id">
+                                                <label class="o_omg_sales_dashboard__check-item">
+                                                    <input type="checkbox" t-att-checked="(state.draftFilters[field] || []).includes(option.id) ? true : undefined" t-on-change="() => toggleSelection(field, option.id)"/>
+                                                    <span><t t-esc="option.name"/></span>
+                                                </label>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+
+                            <div class="o_omg_sales_dashboard__filter-actions-block">
+                                <label>Refresh Mode</label>
+                                <div class="o_omg_sales_dashboard__inline-actions">
+                                    <select t-att-value="state.draftFilters.refresh_interval_ms" t-on-change="setRefreshInterval">
+                                        <option value="0">Off</option>
+                                        <option value="15000">15 sec</option>
+                                        <option value="30000">30 sec</option>
+                                        <option value="60000">1 min</option>
+                                        <option value="300000">5 min</option>
+                                    </select>
+                                    <button type="button" class="btn btn-light" t-on-click="onToggleAutoRefresh">Toggle</button>
+                                </div>
+                            </div>
+                            <div class="o_omg_sales_dashboard__filter-actions-block">
+                                <label>Actions</label>
+                                <div class="o_omg_sales_dashboard__inline-actions">
+                                    <button type="button" class="btn btn-primary" t-on-click="onApplyFilters">Apply Filters</button>
+                                    <button type="button" class="btn btn-light" t-on-click="onResetFilters">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <t t-if="state.loading">
+                    <div class="o_omg_sales_dashboard__skeleton-grid">
+                        <div class="card o_omg_sales_dashboard__skeleton-card"/>
+                        <div class="card o_omg_sales_dashboard__skeleton-card"/>
+                        <div class="card o_omg_sales_dashboard__skeleton-card"/>
+                        <div class="card o_omg_sales_dashboard__skeleton-card"/>
+                    </div>
+                </t>
+                <t t-elif="state.error">
+                    <div class="card o_omg_sales_dashboard__error-block">
+                        <h3>Dashboard Error</h3>
+                        <p><t t-esc="state.error"/></p>
+                        <button type="button" class="btn btn-primary" t-on-click="onRefreshNow">Retry</button>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="o_omg_sales_dashboard__kpis">
+                        <t t-foreach="kpis" t-as="kpi" t-key="kpi.key">
+                            <button type="button" class="card o_omg_sales_dashboard__kpi" t-on-click="() => onKpiClick(kpi.key)">
+                                <div class="o_omg_sales_dashboard__kpi-label"><t t-esc="kpi.label"/></div>
+                                <div class="o_omg_sales_dashboard__kpi-value"><t t-esc="formatValueByType(kpi.value, kpi.type)"/></div>
+                                <div class="o_omg_sales_dashboard__kpi-sub" t-if="kpi.key === 'target_achievement'">Target: <strong><t t-esc="formatCurrency(kpi.secondary_value)"/></strong></div>
+                            </button>
+                        </t>
+                    </div>
+
+                    <div class="o_omg_sales_dashboard__comparison-row">
+                        <t t-foreach="comparisonCards" t-as="card" t-key="card.key">
+                            <div class="card o_omg_sales_dashboard__comparison-card">
+                                <div class="o_omg_sales_dashboard__comparison-label"><t t-esc="card.label"/></div>
+                                <div class="o_omg_sales_dashboard__comparison-main"><t t-esc="formatValueByType(card.current_value, card.type)"/></div>
+                                <div class="o_omg_sales_dashboard__comparison-meta">
+                                    <span>Prev: <t t-esc="formatValueByType(card.previous_value, card.type)"/></span>
+                                    <span t-att-class="'o_omg_sales_dashboard__delta ' + differenceClass(card.difference)"><t t-esc="card.difference &gt;= 0 ? '+' : ''"/><t t-esc="formatValueByType(card.difference, card.type)"/> · <t t-esc="formatPercent(card.difference_pct)"/></span>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <t t-if="state.viewMode === 'dashboard'">
+                        <div class="o_omg_sales_dashboard__grid">
+                            <t t-foreach="panelDefs" t-as="panel" t-key="panel.key">
+                                <div t-att-class="'card ' + panelClass(panel)">
+                                    <div class="o_omg_sales_dashboard__panel-head">
+                                        <div>
+                                            <h3><t t-esc="panel.label"/></h3>
+                                            <p t-if="dashboard.meta"><t t-esc="dashboard.meta.current_label"/></p>
+                                        </div>
+                                        <button type="button" class="btn btn-light btn-sm" t-on-click="() => togglePanelCollapsed(panel.key)"><t t-esc="state.collapsedPanels[panel.key] ? 'Expand' : 'Collapse'"/></button>
+                                    </div>
+
+                                    <t t-if="state.collapsedPanels[panel.key]">
+                                        <div class="o_omg_sales_dashboard__collapsed-note">Panel collapsed</div>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-if="panel.key === 'daily_revenue'">
+                                            <div class="o_omg_sales_dashboard__line-chart">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" preserveAspectRatio="none">
+                                                    <path class="area" t-att-d="areaPath(charts.daily_revenue)"/>
+                                                    <path class="line" t-att-d="linePath(charts.daily_revenue)"/>
+                                                </svg>
+                                                <div class="o_omg_sales_dashboard__line-xlabels">
+                                                    <t t-foreach="charts.daily_revenue" t-as="point" t-key="point.date">
+                                                        <button type="button" t-on-click="() => drilldownByDate(point)"><t t-esc="point.label"/></button>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'daily_orders'">
+                                            <div class="o_omg_sales_dashboard__vbar-chart">
+                                                <t t-foreach="charts.daily_orders" t-as="point" t-key="point.date">
+                                                    <button type="button" class="o_omg_sales_dashboard__vbar-item" t-on-click="() => drilldownByDate(point)">
+                                                        <div class="o_omg_sales_dashboard__vbar-track"><div class="o_omg_sales_dashboard__vbar-fill" t-att-style="verticalBarStyle(point.value, charts.daily_orders)"/></div>
+                                                        <div class="o_omg_sales_dashboard__vbar-label"><t t-esc="point.label"/></div>
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'monthly_revenue'">
+                                            <div class="o_omg_sales_dashboard__vbar-chart">
+                                                <t t-foreach="charts.monthly_revenue" t-as="point" t-key="point.date">
+                                                    <div class="o_omg_sales_dashboard__vbar-item static">
+                                                        <div class="o_omg_sales_dashboard__vbar-track"><div class="o_omg_sales_dashboard__vbar-fill soft" t-att-style="verticalBarStyle(point.value, charts.monthly_revenue)"/></div>
+                                                        <div class="o_omg_sales_dashboard__vbar-value"><t t-esc="formatCurrency(point.value)"/></div>
+                                                        <div class="o_omg_sales_dashboard__vbar-label"><t t-esc="point.label"/></div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'quotation_funnel'">
+                                            <div class="o_omg_sales_dashboard__compare-list">
+                                                <t t-foreach="charts.quotation_funnel" t-as="item" t-key="item.key">
+                                                    <button type="button" class="o_omg_sales_dashboard__compare-item" t-on-click="() => openOrdersList([[ 'state', 'in', item.key === 'confirmed' ? ['sale','done'] : ['draft','sent'] ]])">
+                                                        <div class="o_omg_sales_dashboard__compare-meta"><span><t t-esc="item.label"/></span><strong><t t-esc="formatNumber(item.value)"/></strong></div>
+                                                        <div class="o_omg_sales_dashboard__bar-track"><div class="o_omg_sales_dashboard__bar-fill tertiary" t-att-style="'width:' + item.pct + '%'"/></div>
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'state_distribution'">
+                                            <div class="o_omg_sales_dashboard__donut-block">
+                                                <div class="o_omg_sales_dashboard__donut" t-att-style="donutStyle(charts.state_distribution)"/>
+                                                <div class="o_omg_sales_dashboard__legend">
+                                                    <t t-foreach="charts.state_distribution" t-as="item" t-key="item.key">
+                                                        <button type="button" class="o_omg_sales_dashboard__legend-item" t-on-click="() => drilldownByState(item)">
+                                                            <span class="label"><t t-esc="item.label"/></span>
+                                                            <strong class="value"><t t-esc="formatNumber(item.value)"/></strong>
+                                                        </button>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'team_performance'">
+                                            <div class="o_omg_sales_dashboard__bars">
+                                                <t t-foreach="charts.team_performance" t-as="item" t-key="item.label + '_' + item.record_id">
+                                                    <button type="button" t-att-class="item.record_id ? 'o_omg_sales_dashboard__bar-item' : 'o_omg_sales_dashboard__bar-item static'" t-on-click="() => drilldownByRecord('team_id', item.record_id)">
+                                                        <div class="o_omg_sales_dashboard__bar-meta"><span class="label"><t t-esc="item.label"/></span><strong class="value"><t t-esc="formatCurrency(item.value)"/></strong></div>
+                                                        <div class="o_omg_sales_dashboard__bar-track"><div class="o_omg_sales_dashboard__bar-fill" t-att-style="horizontalBarStyle(item.value, charts.team_performance)"/></div>
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'salesperson_performance'">
+                                            <div class="o_omg_sales_dashboard__bars">
+                                                <t t-foreach="charts.salesperson_performance" t-as="item" t-key="item.label + '_' + item.record_id">
+                                                    <button type="button" t-att-class="item.record_id ? 'o_omg_sales_dashboard__bar-item' : 'o_omg_sales_dashboard__bar-item static'" t-on-click="() => drilldownByRecord('user_id', item.record_id)">
+                                                        <div class="o_omg_sales_dashboard__bar-meta"><span class="label"><t t-esc="item.label"/></span><strong class="value"><t t-esc="formatCurrency(item.value)"/></strong></div>
+                                                        <div class="o_omg_sales_dashboard__bar-track"><div class="o_omg_sales_dashboard__bar-fill" t-att-style="horizontalBarStyle(item.value, charts.salesperson_performance)"/></div>
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'top_customers'">
+                                            <div class="o_omg_sales_dashboard__bars">
+                                                <t t-foreach="charts.top_customers" t-as="item" t-key="item.label + '_' + item.record_id">
+                                                    <button type="button" t-att-class="item.record_id ? 'o_omg_sales_dashboard__bar-item' : 'o_omg_sales_dashboard__bar-item static'" t-on-click="() => drilldownByRecord('partner_id', item.record_id)">
+                                                        <div class="o_omg_sales_dashboard__bar-meta"><span class="label"><t t-esc="item.label"/></span><strong class="value"><t t-esc="formatCurrency(item.value)"/></strong></div>
+                                                        <div class="o_omg_sales_dashboard__bar-track"><div class="o_omg_sales_dashboard__bar-fill" t-att-style="horizontalBarStyle(item.value, charts.top_customers)"/></div>
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'top_products'">
+                                            <div class="o_omg_sales_dashboard__bars">
+                                                <t t-foreach="charts.top_products" t-as="item" t-key="item.label + '_' + item.record_id">
+                                                    <button type="button" t-att-class="item.record_id ? 'o_omg_sales_dashboard__bar-item' : 'o_omg_sales_dashboard__bar-item static'" t-on-click="() => drilldownByRecord('product_id', item.record_id)">
+                                                        <div class="o_omg_sales_dashboard__bar-meta"><span class="label"><t t-esc="item.label"/></span><strong class="value"><t t-esc="formatCurrency(item.value)"/></strong></div>
+                                                        <div class="o_omg_sales_dashboard__bar-track"><div class="o_omg_sales_dashboard__bar-fill" t-att-style="horizontalBarStyle(item.value, charts.top_products)"/></div>
+                                                        <div class="o_omg_sales_dashboard__extra" t-if="item.quantity">Qty sold: <strong><t t-esc="formatNumber(item.quantity)"/></strong></div>
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'top_categories'">
+                                            <div class="o_omg_sales_dashboard__bars">
+                                                <t t-foreach="charts.top_categories" t-as="item" t-key="item.label + '_' + item.record_id">
+                                                    <div class="o_omg_sales_dashboard__bar-item static">
+                                                        <div class="o_omg_sales_dashboard__bar-meta"><span class="label"><t t-esc="item.label"/></span><strong class="value"><t t-esc="formatCurrency(item.value)"/></strong></div>
+                                                        <div class="o_omg_sales_dashboard__bar-track"><div class="o_omg_sales_dashboard__bar-fill" t-att-style="horizontalBarStyle(item.value, charts.top_categories)"/></div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'average_order_trend'">
+                                            <div class="o_omg_sales_dashboard__line-chart light">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" preserveAspectRatio="none">
+                                                    <path class="area" t-att-d="areaPath(charts.average_order_trend)"/>
+                                                    <path class="line" t-att-d="linePath(charts.average_order_trend)"/>
+                                                </svg>
+                                                <div class="o_omg_sales_dashboard__line-xlabels short"><t t-foreach="charts.average_order_trend" t-as="point" t-key="point.date"><span><t t-esc="point.label"/></span></t></div>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'weekday_heatmap'">
+                                            <div class="o_omg_sales_dashboard__heatmap">
+                                                <t t-foreach="charts.weekday_heatmap" t-as="item" t-key="item.key">
+                                                    <div class="o_omg_sales_dashboard__heat-cell" t-att-style="heatStyle(item.value, charts.weekday_heatmap)">
+                                                        <span class="day"><t t-esc="item.label"/></span>
+                                                        <strong><t t-esc="formatCurrency(item.value)"/></strong>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'target_progress'">
+                                            <div t-if="dashboard.targets &amp;&amp; dashboard.targets.lines &amp;&amp; dashboard.targets.lines.length" class="o_omg_sales_dashboard__target-list">
+                                                <div class="o_omg_sales_dashboard__target-overall">Overall Target: <strong><t t-esc="formatCurrency(dashboard.targets.overall_target_amount)"/></strong> · Achievement: <strong><t t-esc="formatPercent(dashboard.targets.overall_achievement)"/></strong></div>
+                                                <t t-foreach="dashboard.targets.lines" t-as="item" t-key="item.key">
+                                                    <div class="o_omg_sales_dashboard__target-item">
+                                                        <div class="o_omg_sales_dashboard__target-meta"><span><t t-esc="item.label"/></span><strong><t t-esc="formatCurrency(item.actual_amount)"/> / <t t-esc="formatCurrency(item.target_amount)"/></strong></div>
+                                                        <div class="o_omg_sales_dashboard__bar-track"><div class="o_omg_sales_dashboard__bar-fill success" t-att-style="'width:' + Math.min(item.achievement, 100) + '%'"/></div>
+                                                        <div class="o_omg_sales_dashboard__extra"><t t-esc="formatPercent(item.achievement)"/></div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div t-else="" class="o_omg_sales_dashboard__empty">No dashboard targets configured yet. Use Sales → Configuration → Dashboard Targets.</div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'profit_top_products'">
+                                            <div class="o_omg_sales_dashboard__bars">
+                                                <t t-foreach="dashboard.profitability.top_products" t-as="item" t-key="item.label + '_' + item.record_id">
+                                                    <div class="o_omg_sales_dashboard__bar-item static">
+                                                        <div class="o_omg_sales_dashboard__bar-meta"><span class="label"><t t-esc="item.label"/></span><strong class="value"><t t-esc="formatCurrency(item.value)"/></strong></div>
+                                                        <div class="o_omg_sales_dashboard__bar-track"><div class="o_omg_sales_dashboard__bar-fill success" t-att-style="horizontalBarStyle(item.value, dashboard.profitability.top_products)"/></div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'profit_top_customers'">
+                                            <div class="o_omg_sales_dashboard__bars">
+                                                <t t-foreach="dashboard.profitability.top_customers" t-as="item" t-key="item.label + '_' + item.record_id">
+                                                    <div class="o_omg_sales_dashboard__bar-item static">
+                                                        <div class="o_omg_sales_dashboard__bar-meta"><span class="label"><t t-esc="item.label"/></span><strong class="value"><t t-esc="formatCurrency(item.value)"/></strong></div>
+                                                        <div class="o_omg_sales_dashboard__bar-track"><div class="o_omg_sales_dashboard__bar-fill success" t-att-style="horizontalBarStyle(item.value, dashboard.profitability.top_customers)"/></div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'low_margin_orders'">
+                                            <div t-if="dashboard.profitability.low_margin_orders.length" class="o_omg_sales_dashboard__table-wrap compact">
+                                                <table class="o_omg_sales_dashboard__table">
+                                                    <thead><tr><th>Order</th><th>Revenue</th><th>Margin</th><th>Margin %</th></tr></thead>
+                                                    <tbody>
+                                                        <t t-foreach="dashboard.profitability.low_margin_orders" t-as="row" t-key="row.record_id">
+                                                            <tr>
+                                                                <td><button type="button" class="o_omg_sales_dashboard__link-btn" t-on-click="() => openOrder(row.record_id)"><t t-esc="row.label"/></button></td>
+                                                                <td><t t-esc="formatCurrency(row.revenue)"/></td>
+                                                                <td><t t-esc="formatCurrency(row.margin_amount)"/></td>
+                                                                <td><t t-esc="formatPercent(row.margin_rate)"/></td>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div t-else="" class="o_omg_sales_dashboard__empty">No low-margin orders detected for the selected period.</div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'alerts'">
+                                            <div t-if="dashboard.alerts.length" class="o_omg_sales_dashboard__alerts">
+                                                <t t-foreach="dashboard.alerts" t-as="alert" t-key="alert.title">
+                                                    <div t-att-class="'o_omg_sales_dashboard__alert ' + alert.level"><strong><t t-esc="alert.title"/></strong><p><t t-esc="alert.message"/></p></div>
+                                                </t>
+                                            </div>
+                                            <div t-else="" class="o_omg_sales_dashboard__empty">No alerts. Performance looks healthy for the selected period.</div>
+                                        </t>
+
+                                        <t t-if="panel.key === 'pivot_summary'">
+                                            <div class="o_omg_sales_dashboard__table-wrap compact">
+                                                <table class="o_omg_sales_dashboard__table">
+                                                    <thead><tr><th>Team</th><th>Quotations</th><th>Confirmed</th><th>Revenue</th><th>Avg Order</th><th>Conversion</th></tr></thead>
+                                                    <tbody>
+                                                        <t t-foreach="dashboard.pivot_summary" t-as="row" t-key="row.label + '_' + row.record_id">
+                                                            <tr>
+                                                                <td><t t-esc="row.label"/></td>
+                                                                <td><t t-esc="formatNumber(row.quotations)"/></td>
+                                                                <td><t t-esc="formatNumber(row.confirmed_orders)"/></td>
+                                                                <td><t t-esc="formatCurrency(row.revenue)"/></td>
+                                                                <td><t t-esc="formatCurrency(row.average_order_value)"/></td>
+                                                                <td><t t-esc="formatPercent(row.conversion)"/></td>
+                                                            </tr>
+                                                        </t>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </t>
+                                    </t>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="card o_omg_sales_dashboard__list-toolbar">
+                            <div class="o_omg_sales_dashboard__toolbar-actions">
+                                <button type="button" class="btn btn-primary" t-on-click="onOpenOrdersList">Open Full Odoo List</button>
+                                <button type="button" class="btn btn-light" t-on-click="onExportCsv">Export CSV</button>
+                            </div>
+                        </div>
+                        <div class="card o_omg_sales_dashboard__table-wrap">
+                            <t t-foreach="groupedOrders" t-as="group" t-key="group.key">
+                                <div class="o_omg_sales_dashboard__group-block">
+                                    <div class="o_omg_sales_dashboard__group-head"><h3><t t-esc="group.label"/></h3><div class="meta"><span><t t-esc="formatNumber(group.rows.length)"/> rows</span><span><t t-esc="formatCurrency(groupTotal(group.rows))"/></span></div></div>
+                                    <table class="o_omg_sales_dashboard__table sticky">
+                                        <thead>
+                                            <tr>
+                                                <t t-foreach="visibleColumns" t-as="column" t-key="column.key">
+                                                    <th><button type="button" class="o_omg_sales_dashboard__sort-btn" t-on-click="() => setSort(column.key)"><t t-esc="column.label"/><span t-if="state.sortBy === column.key"><t t-esc="state.sortAsc ? '↑' : '↓'"/></span></button></th>
+                                                </t>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-if="group.rows.length">
+                                                <t t-foreach="group.rows" t-as="row" t-key="row.id">
+                                                    <tr>
+                                                        <t t-foreach="visibleColumns" t-as="column" t-key="column.key + '_' + row.id">
+                                                            <td>
+                                                                <t t-if="column.type === 'currency'"><t t-esc="formatCurrency(row[column.key])"/></t>
+                                                                <t t-else=""><t t-esc="row[column.key]"/></t>
+                                                            </td>
+                                                        </t>
+                                                        <td><button type="button" class="btn btn-light btn-sm" t-on-click="() => openOrder(row.id)">Open</button></td>
+                                                    </tr>
+                                                </t>
+                                                <tr class="o_omg_sales_dashboard__totals-row"><td t-att-colspan="visibleColumns.length - 1">Group Total</td><td><t t-esc="formatCurrency(groupTotal(group.rows))"/></td><td></td></tr>
+                                            </t>
+                                            <t t-else=""><tr><td t-att-colspan="visibleColumns.length + 1" class="o_omg_sales_dashboard__empty">No orders found for this group.</td></tr></t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_omg_sales_dashboard_target_tree" model="ir.ui.view">
+        <field name="name">omg.sales.dashboard.target.tree</field>
+        <field name="model">omg.sales.dashboard.target</field>
+        <field name="arch" type="xml">
+            <tree string="Dashboard Targets" default_order="month_start desc">
+                <field name="month_start"/>
+                <field name="scope"/>
+                <field name="team_id" optional="show"/>
+                <field name="user_id" optional="show"/>
+                <field name="target_amount"/>
+                <field name="company_id" optional="show"/>
+                <field name="active" optional="show"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_omg_sales_dashboard_target_form" model="ir.ui.view">
+        <field name="name">omg.sales.dashboard.target.form</field>
+        <field name="model">omg.sales.dashboard.target</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard Target">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="scope"/>
+                            <field name="month_start"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="team_id" invisible="scope != 'team'" required="scope == 'team'"/>
+                            <field name="user_id" invisible="scope != 'user'" required="scope == 'user'"/>
+                            <field name="target_amount"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Optional planning notes..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_omg_sales_dashboard_target" model="ir.actions.act_window">
+        <field name="name">Dashboard Targets</field>
+        <field name="res_model">omg.sales.dashboard.target</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_omg_sales_dashboard_target"
+              name="Dashboard Targets"
+              parent="sale.menu_sale_config"
+              action="action_omg_sales_dashboard_target"
+              sequence="95"
+              groups="sales_team.group_sale_manager"/>
+</odoo>
